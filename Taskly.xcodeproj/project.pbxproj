@@ -14,6 +14,10 @@
 		339CB2E51D1E095A00894E4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2E31D1E095A00894E4C /* LaunchScreen.storyboard */; };
 		339CB2F01D1E095A00894E4C /* TasklyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2EF1D1E095A00894E4C /* TasklyTests.swift */; };
 		339CB2FB1D1E095A00894E4C /* TasklyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2FA1D1E095A00894E4C /* TasklyUITests.swift */; };
+		339CB30A1D1E0AD100894E4C /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3081D1E0AD100894E4C /* Realm.framework */; };
+		339CB30B1D1E0AD100894E4C /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3081D1E0AD100894E4C /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		339CB30C1D1E0AD100894E4C /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3091D1E0AD100894E4C /* RealmSwift.framework */; };
+		339CB30D1D1E0AD100894E4C /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3091D1E0AD100894E4C /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +37,21 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		339CB30E1D1E0AD200894E4C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				339CB30D1D1E0AD100894E4C /* RealmSwift.framework in Embed Frameworks */,
+				339CB30B1D1E0AD100894E4C /* Realm.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		339CB2D71D1E095A00894E4C /* Taskly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Taskly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		339CB2DA1D1E095A00894E4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -47,6 +66,8 @@
 		339CB2F61D1E095A00894E4C /* TasklyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TasklyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		339CB2FA1D1E095A00894E4C /* TasklyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasklyUITests.swift; sourceTree = "<group>"; };
 		339CB2FC1D1E095A00894E4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		339CB3081D1E0AD100894E4C /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
+		339CB3091D1E0AD100894E4C /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +75,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				339CB30C1D1E0AD100894E4C /* RealmSwift.framework in Frameworks */,
+				339CB30A1D1E0AD100894E4C /* Realm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +100,8 @@
 		339CB2CE1D1E095A00894E4C = {
 			isa = PBXGroup;
 			children = (
+				339CB3081D1E0AD100894E4C /* Realm.framework */,
+				339CB3091D1E0AD100894E4C /* RealmSwift.framework */,
 				339CB2D91D1E095A00894E4C /* Taskly */,
 				339CB2EE1D1E095A00894E4C /* TasklyTests */,
 				339CB2F91D1E095A00894E4C /* TasklyUITests */,
@@ -135,6 +160,8 @@
 				339CB2D31D1E095A00894E4C /* Sources */,
 				339CB2D41D1E095A00894E4C /* Frameworks */,
 				339CB2D51D1E095A00894E4C /* Resources */,
+				339CB30E1D1E0AD200894E4C /* Embed Frameworks */,
+				339CB30F1D1E0DD400894E4C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -193,6 +220,7 @@
 				TargetAttributes = {
 					339CB2D61D1E095A00894E4C = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = HSZTC8Z4L4;
 					};
 					339CB2EA1D1E095A00894E4C = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -250,6 +278,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		339CB30F1D1E0DD400894E4C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		339CB2D31D1E095A00894E4C /* Sources */ = {
@@ -399,6 +443,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Taskly/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rodrigochousal.Taskly;
@@ -410,6 +459,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Taskly/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rodrigochousal.Taskly;
@@ -421,6 +475,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = TasklyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rodrigochousal.TasklyTests;
@@ -433,6 +488,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = TasklyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rodrigochousal.TasklyTests;
