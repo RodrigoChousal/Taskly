@@ -37,7 +37,13 @@
                             <outlet property="delegate" destination="lTB-vE-M8f" id="YHV-Ns-a34"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Taskly" id="UIc-aP-Mio"/>
+                    <navigationItem key="navigationItem" title="Taskly" id="UIc-aP-Mio">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="TFt-gu-FCV">
+                            <connections>
+                                <action selector="addRoutine:" destination="lTB-vE-M8f" id="zht-yu-dH5"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sng-19-0bc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

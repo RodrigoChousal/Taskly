@@ -21,38 +21,30 @@ class RoutineListController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // BEGIN TESTING DUMMY OBJECTS
-        
-        let routine1 = Routine(name: "Morning", timeOfDay: .Morning)
-        let routine2 = Routine(name: "Skills", timeOfDay: .Afternoon)
-        let routine3 = Routine(name: "News", timeOfDay: .Evening)
-        let routine4 = Routine(name: "Email", timeOfDay: .Morning)
-        
-        try! realm.write {
-            realm.add(routine1)
-            realm.add(routine2)
-            realm.add(routine3)
-            realm.add(routine4)
-        }
-        
-        // END TESTING
-        
         loadRoutines()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return headers[section]
+        if allRoutines[section].isEmpty {
+            return nil
+        } else {
+            return headers[section]
+        }
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return allRoutines.count - 1
+        return headers.count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -67,7 +59,6 @@ class RoutineListController: UITableViewController {
         return cell
     }
 
-    // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
@@ -79,8 +70,7 @@ class RoutineListController: UITableViewController {
             }
             allRoutines[indexPath.section].removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+            
         }
         
         loadRoutines()
@@ -111,6 +101,50 @@ class RoutineListController: UITableViewController {
     }
     */
     
+    @IBAction func addRoutine(sender: AnyObject) {
+        
+        let newRoutinePrompt = UIAlertController(title: "New Routine", message: "Please enter a name.", preferredStyle: .Alert)
+        var nameTextField: UITextField = UITextField()
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        let doneAction = UIAlertAction(title: "Done", style: .Default) {
+            (action) -> Void in
+            
+            let newRoutine = Routine(name: nameTextField.text!, timeOfDay: .Evening)
+            
+            try! self.realm.write {
+                self.realm.add(newRoutine)
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.loadRoutines()
+                self.tableView.reloadData()
+            })
+        }
+        
+        // Disables while field is empty
+        doneAction.enabled = false
+        
+        newRoutinePrompt.addTextFieldWithConfigurationHandler { nameField in
+            
+            // Enables while field is not empty
+            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: nameField, queue: NSOperationQueue.mainQueue()) { (notification) in
+                doneAction.enabled = nameField.text != ""
+            }
+            
+            nameField.autocapitalizationType = .Words
+            nameField.placeholder = "Name"
+            
+            nameTextField = nameField
+        }
+        
+        newRoutinePrompt.addAction(cancelAction)
+        newRoutinePrompt.addAction(doneAction)
+            
+        self.presentViewController(newRoutinePrompt, animated: true, completion: nil)
+    }
+    
     // MARK: - Content Load & Sort
     
     func loadRoutines() {
@@ -122,11 +156,13 @@ class RoutineListController: UITableViewController {
     
     func sortRoutines(){
         
+        // Temporary arrays used for sorting queried routines
         var morningRoutines: [Routine] = []
         var afternoonRoutines: [Routine] = []
         var eveningRoutines: [Routine] = []
         var noTimeRoutines: [Routine] = []
         
+        // Going through queried routines and sorting, also creating necessary section headers: oops. func doing more than 1 thing
         for routine in queriedRoutines {
             switch routine.timeOfDay {
                 case "Morning":
@@ -152,8 +188,10 @@ class RoutineListController: UITableViewController {
             }
         }
         
+        // Clean slate
         allRoutines.removeAll()
         
+        // Repopulate
         allRoutines.append(morningRoutines)
         allRoutines.append(afternoonRoutines)
         allRoutines.append(eveningRoutines)
