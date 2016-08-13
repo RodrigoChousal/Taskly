@@ -11,11 +11,13 @@ import RealmSwift
 
 class RoutineListController: UITableViewController {
     
+    let realm = try! Realm()
+    
     var allRoutines: [[Routine]] = [[]]
     var queriedRoutines: [Routine] = []
     
-    var sections: [String] = []
-
+    var headers: [String] = []
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,8 +28,6 @@ class RoutineListController: UITableViewController {
         let routine3 = Routine(name: "News", timeOfDay: .Evening)
         let routine4 = Routine(name: "Email", timeOfDay: .Morning)
         
-        let realm = try! Realm()
-        
         try! realm.write {
             realm.add(routine1)
             realm.add(routine2)
@@ -37,11 +37,7 @@ class RoutineListController: UITableViewController {
         
         // END TESTING
         
-        let requestedRoutines = realm.objects(Routine.self)
-        queriedRoutines = Array(requestedRoutines)
-        
-        sortRoutines()
-
+        loadRoutines()
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,7 +48,7 @@ class RoutineListController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return allRoutines[section][0].timeOfDay
+        return headers[section]
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -71,25 +67,24 @@ class RoutineListController: UITableViewController {
         return cell
     }
 
-    /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
 
-    /*
-    // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            // Delete the row from the data source
+            try! realm.write {
+                realm.delete(allRoutines[indexPath.section][indexPath.row])
+            }
+            allRoutines[indexPath.section].removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
+        
+        loadRoutines()
     }
-    */
 
     /*
     // Override to support rearranging the table view.
@@ -116,7 +111,14 @@ class RoutineListController: UITableViewController {
     }
     */
     
-    // MARK: - Content Sorting
+    // MARK: - Content Load & Sort
+    
+    func loadRoutines() {
+        let requestedRoutines = realm.objects(Routine.self)
+        queriedRoutines = Array(requestedRoutines)
+        
+        sortRoutines()
+    }
     
     func sortRoutines(){
         
@@ -127,14 +129,26 @@ class RoutineListController: UITableViewController {
         
         for routine in queriedRoutines {
             switch routine.timeOfDay {
-            case "Morning":
-                morningRoutines.append(routine)
-            case "Afternoon":
-                afternoonRoutines.append(routine)
-            case "Evening":
-                eveningRoutines.append(routine)
-            default:
-                noTimeRoutines.append(routine)
+                case "Morning":
+                    morningRoutines.append(routine)
+                    if !headers.contains(routine.timeOfDay) {
+                        headers.append(routine.timeOfDay)
+                    }
+                case "Afternoon":
+                    afternoonRoutines.append(routine)
+                    if !headers.contains(routine.timeOfDay) {
+                        headers.append(routine.timeOfDay)
+                    }
+                case "Evening":
+                    eveningRoutines.append(routine)
+                    if !headers.contains(routine.timeOfDay) {
+                        headers.append(routine.timeOfDay)
+                    }
+                default:
+                    noTimeRoutines.append(routine)
+                    if !headers.contains(routine.timeOfDay) {
+                        headers.append(routine.timeOfDay)
+                    }
             }
         }
         
