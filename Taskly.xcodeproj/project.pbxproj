@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		337354071D1E1DE400896D31 /* Taskly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337354061D1E1DE400896D31 /* Taskly.swift */; };
 		339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2DA1D1E095A00894E4C /* AppDelegate.swift */; };
 		339CB2DD1D1E095A00894E4C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2DC1D1E095A00894E4C /* ViewController.swift */; };
 		339CB2E01D1E095A00894E4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2DE1D1E095A00894E4C /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 		339CB30B1D1E0AD100894E4C /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3081D1E0AD100894E4C /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		339CB30C1D1E0AD100894E4C /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3091D1E0AD100894E4C /* RealmSwift.framework */; };
 		339CB30D1D1E0AD100894E4C /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3091D1E0AD100894E4C /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		33C6905A1D341B40000B86A0 /* RoutineListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C690591D341B40000B86A0 /* RoutineListController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		337354061D1E1DE400896D31 /* Taskly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Taskly.swift; sourceTree = "<group>"; };
 		339CB2D71D1E095A00894E4C /* Taskly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Taskly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		339CB2DA1D1E095A00894E4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		339CB2DC1D1E095A00894E4C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +71,7 @@
 		339CB2FC1D1E095A00894E4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		339CB3081D1E0AD100894E4C /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		339CB3091D1E0AD100894E4C /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
+		33C690591D341B40000B86A0 /* RoutineListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineListController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +127,9 @@
 			isa = PBXGroup;
 			children = (
 				339CB2DA1D1E095A00894E4C /* AppDelegate.swift */,
+				337354061D1E1DE400896D31 /* Taskly.swift */,
 				339CB2DC1D1E095A00894E4C /* ViewController.swift */,
+				33C690591D341B40000B86A0 /* RoutineListController.swift */,
 				339CB2DE1D1E095A00894E4C /* Main.storyboard */,
 				339CB2E11D1E095A00894E4C /* Assets.xcassets */,
 				339CB2E31D1E095A00894E4C /* LaunchScreen.storyboard */,
@@ -300,6 +306,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33C6905A1D341B40000B86A0 /* RoutineListController.swift in Sources */,
+				337354071D1E1DE400896D31 /* Taskly.swift in Sources */,
 				339CB2DD1D1E095A00894E4C /* ViewController.swift in Sources */,
 				339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */,
 			);
@@ -452,6 +460,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rodrigochousal.Taskly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -468,6 +477,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rodrigochousal.Taskly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -538,6 +548,7 @@
 				339CB3011D1E095A00894E4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		339CB3021D1E095A00894E4C /* Build configuration list for PBXNativeTarget "TasklyTests" */ = {
 			isa = XCConfigurationList;
@@ -546,6 +557,7 @@
 				339CB3041D1E095A00894E4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		339CB3051D1E095A00894E4C /* Build configuration list for PBXNativeTarget "TasklyUITests" */ = {
 			isa = XCConfigurationList;
@@ -554,6 +566,7 @@
 				339CB3071D1E095A00894E4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
