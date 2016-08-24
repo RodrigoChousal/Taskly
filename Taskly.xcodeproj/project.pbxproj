@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		337354071D1E1DE400896D31 /* Taskly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337354061D1E1DE400896D31 /* Taskly.swift */; };
 		339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2DA1D1E095A00894E4C /* AppDelegate.swift */; };
-		339CB2DD1D1E095A00894E4C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2DC1D1E095A00894E4C /* ViewController.swift */; };
 		339CB2E01D1E095A00894E4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2DE1D1E095A00894E4C /* Main.storyboard */; };
 		339CB2E21D1E095A00894E4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2E11D1E095A00894E4C /* Assets.xcassets */; };
 		339CB2E51D1E095A00894E4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2E31D1E095A00894E4C /* LaunchScreen.storyboard */; };
@@ -20,6 +19,9 @@
 		339CB30C1D1E0AD100894E4C /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3091D1E0AD100894E4C /* RealmSwift.framework */; };
 		339CB30D1D1E0AD100894E4C /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 339CB3091D1E0AD100894E4C /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		33C6905A1D341B40000B86A0 /* RoutineListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C690591D341B40000B86A0 /* RoutineListController.swift */; };
+		33DA91F31D6404F3006DE41F /* RoutineDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA91F21D6404F3006DE41F /* RoutineDetailTableViewController.swift */; };
+		33F575101D66266200EFA989 /* RepeatRoutineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F5750F1D66266200EFA989 /* RepeatRoutineTableViewController.swift */; };
+		33F575121D66266D00EFA989 /* RoutineTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F575111D66266D00EFA989 /* RoutineTimeTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +60,6 @@
 		337354061D1E1DE400896D31 /* Taskly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Taskly.swift; sourceTree = "<group>"; };
 		339CB2D71D1E095A00894E4C /* Taskly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Taskly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		339CB2DA1D1E095A00894E4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		339CB2DC1D1E095A00894E4C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		339CB2DF1D1E095A00894E4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		339CB2E11D1E095A00894E4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		339CB2E41D1E095A00894E4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -72,6 +73,9 @@
 		339CB3081D1E0AD100894E4C /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		339CB3091D1E0AD100894E4C /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		33C690591D341B40000B86A0 /* RoutineListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineListController.swift; sourceTree = "<group>"; };
+		33DA91F21D6404F3006DE41F /* RoutineDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineDetailTableViewController.swift; sourceTree = "<group>"; };
+		33F5750F1D66266200EFA989 /* RepeatRoutineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatRoutineTableViewController.swift; sourceTree = "<group>"; };
+		33F575111D66266D00EFA989 /* RoutineTimeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineTimeTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,8 +132,8 @@
 			children = (
 				339CB2DA1D1E095A00894E4C /* AppDelegate.swift */,
 				337354061D1E1DE400896D31 /* Taskly.swift */,
-				339CB2DC1D1E095A00894E4C /* ViewController.swift */,
 				33C690591D341B40000B86A0 /* RoutineListController.swift */,
+				33E45AD91D6D1B2F000D34A1 /* Add/Edit Routine */,
 				339CB2DE1D1E095A00894E4C /* Main.storyboard */,
 				339CB2E11D1E095A00894E4C /* Assets.xcassets */,
 				339CB2E31D1E095A00894E4C /* LaunchScreen.storyboard */,
@@ -154,6 +158,16 @@
 				339CB2FC1D1E095A00894E4C /* Info.plist */,
 			);
 			path = TasklyUITests;
+			sourceTree = "<group>";
+		};
+		33E45AD91D6D1B2F000D34A1 /* Add/Edit Routine */ = {
+			isa = PBXGroup;
+			children = (
+				33DA91F21D6404F3006DE41F /* RoutineDetailTableViewController.swift */,
+				33F575111D66266D00EFA989 /* RoutineTimeTableViewController.swift */,
+				33F5750F1D66266200EFA989 /* RepeatRoutineTableViewController.swift */,
+			);
+			name = "Add/Edit Routine";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,9 +320,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33F575101D66266200EFA989 /* RepeatRoutineTableViewController.swift in Sources */,
 				33C6905A1D341B40000B86A0 /* RoutineListController.swift in Sources */,
+				33DA91F31D6404F3006DE41F /* RoutineDetailTableViewController.swift in Sources */,
+				33F575121D66266D00EFA989 /* RoutineTimeTableViewController.swift in Sources */,
 				337354071D1E1DE400896D31 /* Taskly.swift in Sources */,
-				339CB2DD1D1E095A00894E4C /* ViewController.swift in Sources */,
 				339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

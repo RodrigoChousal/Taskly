@@ -101,48 +101,27 @@ class RoutineListController: UITableViewController {
     }
     */
     
-    @IBAction func addRoutine(sender: AnyObject) {
+    @IBAction func cancel(segue:UIStoryboardSegue) {
         
-        let newRoutinePrompt = UIAlertController(title: "New Routine", message: "Please enter a name.", preferredStyle: .Alert)
-        var nameTextField: UITextField = UITextField()
+    }
+    
+    @IBAction func save(segue:UIStoryboardSegue) {
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        
-        let doneAction = UIAlertAction(title: "Done", style: .Default) {
-            (action) -> Void in
+        if let routineDetailTVC = segue.sourceViewController as? RoutineDetailTableViewController {
             
-            let newRoutine = Routine(name: nameTextField.text!, timeOfDay: .Evening)
-            
-            try! self.realm.write {
-                self.realm.add(newRoutine)
+            if let routine = routineDetailTVC.newRoutine {
+                
+                try! self.realm.write {
+                    self.realm.add(routine)
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.loadRoutines()
+                    self.tableView.reloadData()
+                })
             }
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.loadRoutines()
-                self.tableView.reloadData()
-            })
         }
         
-        // Disables while field is empty
-        doneAction.enabled = false
-        
-        newRoutinePrompt.addTextFieldWithConfigurationHandler { nameField in
-            
-            // Enables while field is not empty
-            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: nameField, queue: NSOperationQueue.mainQueue()) { (notification) in
-                doneAction.enabled = nameField.text != ""
-            }
-            
-            nameField.autocapitalizationType = .Words
-            nameField.placeholder = "Name"
-            
-            nameTextField = nameField
-        }
-        
-        newRoutinePrompt.addAction(cancelAction)
-        newRoutinePrompt.addAction(doneAction)
-            
-        self.presentViewController(newRoutinePrompt, animated: true, completion: nil)
     }
     
     // MARK: - Content Load & Sort
@@ -198,8 +177,3 @@ class RoutineListController: UITableViewController {
         allRoutines.append(noTimeRoutines)
     }
 }
-
-
-
-
-

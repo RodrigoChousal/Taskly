@@ -28,6 +28,8 @@ enum DayTime: String {
     case Afternoon
     case Evening
     case None
+    
+    static let allValues = [Morning, Afternoon, Evening, None]
 }
 
 // Task model
