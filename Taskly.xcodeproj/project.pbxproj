@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		337354071D1E1DE400896D31 /* Taskly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337354061D1E1DE400896D31 /* Taskly.swift */; };
+		3309D3451D766B9C0051CE16 /* TaskListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3309D3441D766B9C0051CE16 /* TaskListController.swift */; };
+		336B0E9A1D7704D100631455 /* TaskDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336B0E991D7704D100631455 /* TaskDetailTableViewController.swift */; };
+		337354071D1E1DE400896D31 /* TasklyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337354061D1E1DE400896D31 /* TasklyModel.swift */; };
 		339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2DA1D1E095A00894E4C /* AppDelegate.swift */; };
 		339CB2E01D1E095A00894E4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2DE1D1E095A00894E4C /* Main.storyboard */; };
 		339CB2E21D1E095A00894E4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2E11D1E095A00894E4C /* Assets.xcassets */; };
@@ -57,7 +59,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		337354061D1E1DE400896D31 /* Taskly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Taskly.swift; sourceTree = "<group>"; };
+		3309D3441D766B9C0051CE16 /* TaskListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskListController.swift; sourceTree = "<group>"; };
+		336B0E991D7704D100631455 /* TaskDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDetailTableViewController.swift; sourceTree = "<group>"; };
+		337354061D1E1DE400896D31 /* TasklyModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TasklyModel.swift; sourceTree = "<group>"; };
 		339CB2D71D1E095A00894E4C /* Taskly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Taskly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		339CB2DA1D1E095A00894E4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		339CB2DF1D1E095A00894E4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -131,9 +135,11 @@
 			isa = PBXGroup;
 			children = (
 				339CB2DA1D1E095A00894E4C /* AppDelegate.swift */,
-				337354061D1E1DE400896D31 /* Taskly.swift */,
+				337354061D1E1DE400896D31 /* TasklyModel.swift */,
 				33C690591D341B40000B86A0 /* RoutineListController.swift */,
 				33E45AD91D6D1B2F000D34A1 /* Add/Edit Routine */,
+				3309D3441D766B9C0051CE16 /* TaskListController.swift */,
+				336B0E991D7704D100631455 /* TaskDetailTableViewController.swift */,
 				339CB2DE1D1E095A00894E4C /* Main.storyboard */,
 				339CB2E11D1E095A00894E4C /* Assets.xcassets */,
 				339CB2E31D1E095A00894E4C /* LaunchScreen.storyboard */,
@@ -321,10 +327,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				33F575101D66266200EFA989 /* RepeatRoutineTableViewController.swift in Sources */,
+				3309D3451D766B9C0051CE16 /* TaskListController.swift in Sources */,
 				33C6905A1D341B40000B86A0 /* RoutineListController.swift in Sources */,
+				336B0E9A1D7704D100631455 /* TaskDetailTableViewController.swift in Sources */,
 				33DA91F31D6404F3006DE41F /* RoutineDetailTableViewController.swift in Sources */,
 				33F575121D66266D00EFA989 /* RoutineTimeTableViewController.swift in Sources */,
-				337354071D1E1DE400896D31 /* Taskly.swift in Sources */,
+				337354071D1E1DE400896D31 /* TasklyModel.swift in Sources */,
 				339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

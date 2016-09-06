@@ -1,6 +1,6 @@
 //
-//  Taskly.swift
-//  Taskly
+//  TasklyModel.swift
+//  TasklyModel
 //
 //  Created by Development on 6/24/16.
 //  Copyright © 2016 Rodrigo Chousal. All rights reserved.
@@ -39,6 +39,8 @@ class Task: Object {
     dynamic var desc: String? = nil
     dynamic var length: Double = 0.0
     dynamic var state: Bool = true
+    
+    dynamic var routineName: String = ""
     
     convenience init(name: String, desc: String, length: Double) {
         self.init()

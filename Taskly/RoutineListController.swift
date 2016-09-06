@@ -16,16 +16,19 @@ class RoutineListController: UITableViewController {
     var allRoutines: [[Routine]] = [[]]
     var queriedRoutines: [Routine] = []
     
-    var headers: [String] = []
+    var headers = [String](count: 4, repeatedValue: "")
+    
+    var selectedRoutine: String = ""
  
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        loadRoutines()
+
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        loadRoutines()
         tableView.reloadData()
     }
 
@@ -48,15 +51,24 @@ class RoutineListController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return allRoutines[section].count
+        if allRoutines[section].isEmpty {
+            return 0
+        } else {
+            return allRoutines[section].count
+        }
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("RoutineCell", forIndexPath: indexPath)
         
         cell.textLabel?.text = allRoutines[indexPath.section][indexPath.row].name
-
+        
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        selectedRoutine = allRoutines[indexPath.section][indexPath.row].name
+        return indexPath
     }
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -91,15 +103,14 @@ class RoutineListController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "insideRoutine" {
+            let destinationVC = segue.destinationViewController as! TaskListController
+            destinationVC.routineName = self.selectedRoutine
+        }
     }
-    */
     
     @IBAction func cancel(segue:UIStoryboardSegue) {
         
@@ -135,36 +146,31 @@ class RoutineListController: UITableViewController {
     
     func sortRoutines(){
         
-        // Temporary arrays used for sorting queried routines
-        var morningRoutines: [Routine] = []
-        var afternoonRoutines: [Routine] = []
-        var eveningRoutines: [Routine] = []
-        var noTimeRoutines: [Routine] = []
+        // Temporary arrays used for filtering
+        let morningRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'Morning'"))
+        let afternoonRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'Afternoon'"))
+        let eveningRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'Evening'"))
+        let noTimeRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'None'"))
         
-        // Going through queried routines and sorting, also creating necessary section headers: oops. func doing more than 1 thing
-        for routine in queriedRoutines {
-            switch routine.timeOfDay {
-                case "Morning":
-                    morningRoutines.append(routine)
-                    if !headers.contains(routine.timeOfDay) {
-                        headers.append(routine.timeOfDay)
-                    }
-                case "Afternoon":
-                    afternoonRoutines.append(routine)
-                    if !headers.contains(routine.timeOfDay) {
-                        headers.append(routine.timeOfDay)
-                    }
-                case "Evening":
-                    eveningRoutines.append(routine)
-                    if !headers.contains(routine.timeOfDay) {
-                        headers.append(routine.timeOfDay)
-                    }
-                default:
-                    noTimeRoutines.append(routine)
-                    if !headers.contains(routine.timeOfDay) {
-                        headers.append(routine.timeOfDay)
-                    }
-            }
+        // Checks if a section should be created
+        if morningRoutines.count != 0 {
+            headers.removeAtIndex(0)
+            headers.insert(morningRoutines[0].timeOfDay, atIndex: 0)
+        }
+        
+        if afternoonRoutines.count != 0 {
+            headers.removeAtIndex(1)
+            headers.insert(afternoonRoutines[0].timeOfDay, atIndex: 1)
+        }
+        
+        if eveningRoutines.count != 0 {
+            headers.removeAtIndex(2)
+            headers.insert(eveningRoutines[0].timeOfDay, atIndex: 2)
+        }
+        
+        if noTimeRoutines.count != 0 {
+            headers.removeAtIndex(3)
+            headers.insert(noTimeRoutines[0].timeOfDay, atIndex: 3)
         }
         
         // Clean slate
@@ -175,5 +181,6 @@ class RoutineListController: UITableViewController {
         allRoutines.append(afternoonRoutines)
         allRoutines.append(eveningRoutines)
         allRoutines.append(noTimeRoutines)
-    }
+        
+        }
 }
