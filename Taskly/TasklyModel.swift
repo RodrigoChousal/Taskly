@@ -12,15 +12,25 @@ import RealmSwift
 // Routine model
 class Routine: Object {
     
+    dynamic var id = 0
     dynamic var name: String = ""
     dynamic var timeOfDay: String = ""
+    dynamic var reps: String = ""
+    dynamic var remind = 0.0
+    
     let tasks = List<Task>()
     
-    convenience init(name: String, timeOfDay: DayTime) {
+    convenience init(name: String, timeOfDay: DayTime, id: Int) {
         self.init()
         self.timeOfDay = timeOfDay.rawValue
         self.name = name
+        self.id = id
     }
+    
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
 }
 
 enum DayTime: String {
@@ -32,20 +42,39 @@ enum DayTime: String {
     static let allValues = [Morning, Afternoon, Evening, None]
 }
 
+enum Repeats: String {
+    case Daily
+    case EveryOther
+    case Weekly
+    case Monthly
+    
+    static let allValues = [Daily, EveryOther, Weekly, Monthly]
+}
+
 // Task model
 class Task: Object {
     
+    dynamic var id = 0
+
     dynamic var name: String = ""
     dynamic var desc: String? = nil
     dynamic var length: Double = 0.0
     dynamic var state: Bool = true
     
-    dynamic var routineName: String = ""
+    let routine = LinkingObjects(fromType: Routine.self, property: "tasks")
     
-    convenience init(name: String, desc: String, length: Double) {
+    dynamic var completed: Int = 0
+    dynamic var averageTime: Int = 0
+        
+    convenience init(name: String, desc: String, length: Double, id: Int) {
         self.init()
         self.name = name
         self.desc = desc
         self.length = length
+        self.id = id
+    }
+    
+    override static func primaryKey() -> String? {
+        return "id"
     }
 }
