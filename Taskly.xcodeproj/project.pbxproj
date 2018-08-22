@@ -8,15 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		3309D3451D766B9C0051CE16 /* TaskListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3309D3441D766B9C0051CE16 /* TaskListController.swift */; };
+		335B6F461E216A94008B17A8 /* BackgroundChanger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335B6F451E216A94008B17A8 /* BackgroundChanger.swift */; };
+		335B6F481E21B7C8008B17A8 /* UIView+setBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335B6F471E21B7C8008B17A8 /* UIView+setBackground.swift */; };
+		336557D51E201D88009FEC72 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336557D41E201D88009FEC72 /* AboutViewController.swift */; };
+		336557D81E204135009FEC72 /* FeedbackComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336557D71E204135009FEC72 /* FeedbackComposer.swift */; };
 		336B0E9A1D7704D100631455 /* TaskDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336B0E991D7704D100631455 /* TaskDetailTableViewController.swift */; };
 		337354071D1E1DE400896D31 /* TasklyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337354061D1E1DE400896D31 /* TasklyModel.swift */; };
 		339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339CB2DA1D1E095A00894E4C /* AppDelegate.swift */; };
 		339CB2E01D1E095A00894E4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2DE1D1E095A00894E4C /* Main.storyboard */; };
 		339CB2E21D1E095A00894E4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2E11D1E095A00894E4C /* Assets.xcassets */; };
 		339CB2E51D1E095A00894E4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339CB2E31D1E095A00894E4C /* LaunchScreen.storyboard */; };
-		33A7F5D21DE22FD7003AFA6A /* UIImage+blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7F5D11DE22FD7003AFA6A /* UIImage+blur.swift */; };
+		33A7F5D21DE22FD7003AFA6A /* UIImageView+gaussBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7F5D11DE22FD7003AFA6A /* UIImageView+gaussBlur.swift */; };
 		33AC0E361D85C82B007B3E15 /* ActiveRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AC0E351D85C82B007B3E15 /* ActiveRoutineViewController.swift */; };
 		33C6905A1D341B40000B86A0 /* RoutineListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C690591D341B40000B86A0 /* RoutineListController.swift */; };
+		33DA7A2B1DE8DB7B005CBA94 /* RoutineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA7A2A1DE8DB7B005CBA94 /* RoutineCell.swift */; };
+		33DA7A2D1DE8DB9B005CBA94 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA7A2C1DE8DB9B005CBA94 /* TaskCell.swift */; };
 		33DA91F31D6404F3006DE41F /* RoutineDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA91F21D6404F3006DE41F /* RoutineDetailTableViewController.swift */; };
 		33F575101D66266200EFA989 /* RepeatRoutineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F5750F1D66266200EFA989 /* RepeatRoutineTableViewController.swift */; };
 		33F575121D66266D00EFA989 /* RoutineTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F575111D66266D00EFA989 /* RoutineTimeTableViewController.swift */; };
@@ -40,6 +46,10 @@
 		3309D3441D766B9C0051CE16 /* TaskListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskListController.swift; sourceTree = "<group>"; };
 		3337381C1D92DC5B003DDA77 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = "Pods/../build/Debug-iphoneos/Realm/Realm.framework"; sourceTree = "<group>"; };
 		3337381D1D92DC5B003DDA77 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = "Pods/../build/Debug-iphoneos/RealmSwift/RealmSwift.framework"; sourceTree = "<group>"; };
+		335B6F451E216A94008B17A8 /* BackgroundChanger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundChanger.swift; sourceTree = "<group>"; };
+		335B6F471E21B7C8008B17A8 /* UIView+setBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+setBackground.swift"; sourceTree = "<group>"; };
+		336557D41E201D88009FEC72 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		336557D71E204135009FEC72 /* FeedbackComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackComposer.swift; sourceTree = "<group>"; };
 		336B0E991D7704D100631455 /* TaskDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDetailTableViewController.swift; sourceTree = "<group>"; };
 		337354061D1E1DE400896D31 /* TasklyModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TasklyModel.swift; sourceTree = "<group>"; };
 		337958181D92C4330088B061 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = "../../Library/Developer/Xcode/DerivedData/Taskly-baargubgirtvyzaawapcsiibpuri/Build/Products/Debug-iphoneos/Realm/Realm.framework"; sourceTree = "<group>"; };
@@ -50,9 +60,11 @@
 		339CB2E11D1E095A00894E4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		339CB2E41D1E095A00894E4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		339CB2E61D1E095A00894E4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		33A7F5D11DE22FD7003AFA6A /* UIImage+blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+blur.swift"; sourceTree = "<group>"; };
+		33A7F5D11DE22FD7003AFA6A /* UIImageView+gaussBlur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+gaussBlur.swift"; sourceTree = "<group>"; };
 		33AC0E351D85C82B007B3E15 /* ActiveRoutineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRoutineViewController.swift; sourceTree = "<group>"; };
 		33C690591D341B40000B86A0 /* RoutineListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineListController.swift; sourceTree = "<group>"; };
+		33DA7A2A1DE8DB7B005CBA94 /* RoutineCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineCell.swift; sourceTree = "<group>"; };
+		33DA7A2C1DE8DB9B005CBA94 /* TaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		33DA91F21D6404F3006DE41F /* RoutineDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineDetailTableViewController.swift; sourceTree = "<group>"; };
 		33F5750F1D66266200EFA989 /* RepeatRoutineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatRoutineTableViewController.swift; sourceTree = "<group>"; };
 		33F575111D66266D00EFA989 /* RoutineTimeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineTimeTableViewController.swift; sourceTree = "<group>"; };
@@ -73,6 +85,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		336557D61E2026C3009FEC72 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				336557D41E201D88009FEC72 /* AboutViewController.swift */,
+				336557D71E204135009FEC72 /* FeedbackComposer.swift */,
+				335B6F451E216A94008B17A8 /* BackgroundChanger.swift */,
+			);
+			name = About;
+			sourceTree = "<group>";
+		};
 		339CB2CE1D1E095A00894E4C = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +118,7 @@
 			children = (
 				339CB2DA1D1E095A00894E4C /* AppDelegate.swift */,
 				337354061D1E1DE400896D31 /* TasklyModel.swift */,
+				336557D61E2026C3009FEC72 /* About */,
 				33C690591D341B40000B86A0 /* RoutineListController.swift */,
 				33E45AD91D6D1B2F000D34A1 /* Add/Edit Routine */,
 				3309D3441D766B9C0051CE16 /* TaskListController.swift */,
@@ -103,6 +126,8 @@
 				33AC0E351D85C82B007B3E15 /* ActiveRoutineViewController.swift */,
 				33A277E81DDCB7C20001FAF4 /* Extensions */,
 				339CB2DE1D1E095A00894E4C /* Main.storyboard */,
+				33DA7A2A1DE8DB7B005CBA94 /* RoutineCell.swift */,
+				33DA7A2C1DE8DB9B005CBA94 /* TaskCell.swift */,
 				339CB2E11D1E095A00894E4C /* Assets.xcassets */,
 				339CB2E31D1E095A00894E4C /* LaunchScreen.storyboard */,
 				339CB2E61D1E095A00894E4C /* Info.plist */,
@@ -113,7 +138,8 @@
 		33A277E81DDCB7C20001FAF4 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				33A7F5D11DE22FD7003AFA6A /* UIImage+blur.swift */,
+				33A7F5D11DE22FD7003AFA6A /* UIImageView+gaussBlur.swift */,
+				335B6F471E21B7C8008B17A8 /* UIView+setBackground.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -156,7 +182,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 339CB2FF1D1E095A00894E4C /* Build configuration list for PBXNativeTarget "Taskly" */;
 			buildPhases = (
-				1D648FDBE745A74AE75CEAB5 /* 📦 Check Pods Manifest.lock */,
+				1D648FDBE745A74AE75CEAB5 /* [CP] Check Pods Manifest.lock */,
 				30F38B4513E3F50E90DBD788 /* [CP] Check Pods Manifest.lock */,
 				339CB2D31D1E095A00894E4C /* Sources */,
 				339CB2D41D1E095A00894E4C /* Frameworks */,
@@ -226,14 +252,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1D648FDBE745A74AE75CEAB5 /* 📦 Check Pods Manifest.lock */ = {
+		1D648FDBE745A74AE75CEAB5 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,13 +364,19 @@
 			files = (
 				33AC0E361D85C82B007B3E15 /* ActiveRoutineViewController.swift in Sources */,
 				33F575101D66266200EFA989 /* RepeatRoutineTableViewController.swift in Sources */,
-				33A7F5D21DE22FD7003AFA6A /* UIImage+blur.swift in Sources */,
+				335B6F481E21B7C8008B17A8 /* UIView+setBackground.swift in Sources */,
+				33DA7A2B1DE8DB7B005CBA94 /* RoutineCell.swift in Sources */,
+				336557D81E204135009FEC72 /* FeedbackComposer.swift in Sources */,
+				33A7F5D21DE22FD7003AFA6A /* UIImageView+gaussBlur.swift in Sources */,
+				33DA7A2D1DE8DB9B005CBA94 /* TaskCell.swift in Sources */,
 				3309D3451D766B9C0051CE16 /* TaskListController.swift in Sources */,
 				33C6905A1D341B40000B86A0 /* RoutineListController.swift in Sources */,
 				336B0E9A1D7704D100631455 /* TaskDetailTableViewController.swift in Sources */,
 				33DA91F31D6404F3006DE41F /* RoutineDetailTableViewController.swift in Sources */,
+				336557D51E201D88009FEC72 /* AboutViewController.swift in Sources */,
 				33F575121D66266D00EFA989 /* RoutineTimeTableViewController.swift in Sources */,
 				337354071D1E1DE400896D31 /* TasklyModel.swift in Sources */,
+				335B6F461E216A94008B17A8 /* BackgroundChanger.swift in Sources */,
 				339CB2DB1D1E095A00894E4C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,9 +500,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = HSZTC8Z4L4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Taskly/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -488,9 +521,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = HSZTC8Z4L4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Taskly/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";

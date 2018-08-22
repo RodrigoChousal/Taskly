@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RoutineTimeTableViewController: UITableViewController, UINavigationControllerDelegate { // Podría ser una class con repeat
+class RoutineTimeTableViewController: UITableViewController, UINavigationControllerDelegate {
     
     var lastSelectedIndexPath = IndexPath(row: 0, section: 0)
     let categories = ["Morning", "Afternoon", "Evening", "None"]
@@ -18,7 +18,12 @@ class RoutineTimeTableViewController: UITableViewController, UINavigationControl
             
         navigationController?.delegate = self
         
+        view.setBackground()
+        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
+        
+        tableView.backgroundView?.backgroundColor = UIColor.clear
+        tableView.backgroundColor = UIColor.clear
     }
     
     override func didReceiveMemoryWarning() {
@@ -27,14 +32,23 @@ class RoutineTimeTableViewController: UITableViewController, UINavigationControl
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if let controller = viewController as? RoutineDetailTableViewController {
-            controller.timeCell.detailTextLabel?.text = categories[(lastSelectedIndexPath as NSIndexPath).row]
+            controller.timeCell.textLabel?.text = categories[(lastSelectedIndexPath as NSIndexPath).row]
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath) as UITableViewCell
-        cell.accessoryType = ((lastSelectedIndexPath as NSIndexPath).row == (indexPath as NSIndexPath).row) ? .checkmark : .none
-        cell.textLabel?.text = categories[(indexPath as NSIndexPath).row]
+        
+        cell.backgroundColor = UIColor.clear
+        cell.textLabel?.text = categories[indexPath.row]
+        cell.textLabel?.font = UIFont(name: "Avenir-Light", size: 24)
+        cell.textLabel?.textColor = UIColor.white
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
+        
+        cell.tintColor = UIColor.white
+        
+        cell.accessoryType = lastSelectedIndexPath.row == indexPath.row ? .checkmark : .none
+        cell.textLabel?.text = categories[indexPath.row]
         
         return cell
     }

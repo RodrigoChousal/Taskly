@@ -20,18 +20,19 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
     var newTask: Task?
     
     var lineCount = 1
-    var descCount = 0
     
     var inEdit = false
-
+    
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descField: UITextView!
+    
     @IBOutlet weak var timePicker: UIDatePicker!
     
-    @IBOutlet weak var selectTrackCell: UITableViewCell!
+    @IBOutlet weak var nameCell: UITableViewCell!
+    @IBOutlet weak var notesCell: UITableViewCell!
     @IBOutlet weak var activeCell: UITableViewCell!
-    
+    @IBOutlet weak var labelCell: UITableViewCell!
     @IBOutlet weak var activeSwitch: UISwitch!
     
     override func viewDidLoad() {
@@ -40,36 +41,27 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
         nameField.delegate = self
         descField.delegate = self
         
+        view.setBackground()
+        
+        drawSeparator(forCell: nameCell)
+        drawSeparator(forCell: notesCell)
+        
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+        
+        descField.textContainer.maximumNumberOfLines = 4
+        descField.textContainer.lineBreakMode = .byClipping
+        
+        if UIScreen.main.bounds.size.height == 568 {
+            timePicker.frame.size.height = 100
+        }
+        
         prepareView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         nameField.resignFirstResponder()
-    }
-    
-    func prepareView() {
-        
-        activeCell.accessoryView = activeSwitch
-        
-        // Disables while field is empty
-        saveButton.isEnabled = false
-        
-        if inEdit {
-            self.navigationItem.title = newTask?.name
-            self.nameField.text = newTask?.name
-            self.descField.text = newTask?.desc
-            self.timePicker.countDownDuration = (newTask?.length)! as TimeInterval
-            
-            activeSwitch.addTarget(self, action: #selector(self.switchValueChanged), for: UIControlEvents.valueChanged)
-            
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextViewTextDidChange, object: descField, queue: OperationQueue.main) { (notification) in
-                self.saveButton.isEnabled = self.descField.text != self.newTask?.desc
-            }
-        }
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: nameField, queue: OperationQueue.main) { (notification) in
-            self.saveButton.isEnabled = self.nameField.text != ""
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -82,48 +74,116 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
         }
     }
     
+    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        let footer: UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView
+        footer.contentView.backgroundColor = UIColor.clear
+        footer.textLabel?.textColor = UIColor.white
+        footer.alpha = 1.0
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let currentCharacterCount = textField.text?.characters.count ?? 0
         
-        if range.length + range.location > currentCharacterCount {
+        if range.length + range.location > currentCharacterCount || currentCharacterCount == 16 && string != "" {
             return false
         }
         
         let newLength = currentCharacterCount + string.characters.count - range.length
         
-        return newLength <= 40
+        return newLength <= 25
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
     }
-    
+        
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        if text == "\n" { // Line added
-            lineCount += 1
-            
-            if lineCount == 5 {
-                print("Oops! lineCount at \(lineCount)")
-                lineCount -= 1
-                textView.deleteBackward()
-            }
-            
-        } else if !text.isEmpty { // Character added
-            descCount += 1
-            
-        } else if range.length == 1 && textView.text.characters.last == "\n" { // Line deleted
-            lineCount -= 1
-            
-        } else if text == "" && descCount != 0 { // Character deleted
-            descCount -= 1
+        if textView.text.characters.count == 0 {
+            lineCount = 1
         }
         
-        let newLength = descCount + text.characters.count - range.length - lineCount
+        // Still does not solve pasting...
+        let textRect = textView.caretRect(for: textView.endOfDocument)
+                
+        //Maximum length of a character is about 10
+        if textView.contentSize.width - textRect.maxX < 10 {
+            
+            // If user is already deleting, don't delete twice
+            if text != "" {
+                return false
+            }
+        }
         
-        return newLength <= 202 // Arbitrary number
+        // Keeps track of new lines so not infinite amount
+        if text == "\n" {
+            
+            if lineCount == 4 || textRect.maxX == 6.0 {
+                textView.deleteBackward()
+                self.dismissKeyboard()
+                return false
+            }
+            
+            lineCount += 1
+        }
+        
+        // Changes lineCount if new line is deleted
+        if text == "" && textRect.maxX == 6.0 && textView.text.characters.count != 0 {
+            lineCount -= 1
+        }
+        
+        return true
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    // MARK: - Helper
+    
+    func prepareView() {
+        
+        tableView.backgroundView?.backgroundColor = UIColor.clear
+        tableView.backgroundColor = UIColor.clear
+        
+        tableView.separatorStyle = .none
+        tableView.isScrollEnabled = false
+        
+        nameCell.backgroundColor = UIColor.clear
+        notesCell.backgroundColor = UIColor.clear
+        activeCell.backgroundColor = UIColor.clear
+//        labelCell.backgroundColor = UIColor.clear
+        
+        descField.backgroundColor = UIColor.clear
+        descField.isScrollEnabled = false
+        
+        timePicker.setValue(UIColor.white, forKeyPath: "textColor")
+        
+        // Disables while field is empty
+        saveButton.isEnabled = false
+        
+        setDateToPicker(task: nil)
+        
+        if let newTask = newTask, inEdit {
+            navigationItem.title = newTask.name
+            nameField.text = newTask.name
+            descField.text = newTask.desc
+            activeSwitch.isOn = newTask.state
+            
+            setDateToPicker(task: newTask)
+            
+            activeSwitch.addTarget(self, action: #selector(self.switchValueChanged), for: UIControlEvents.valueChanged)
+            
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextViewTextDidChange, object: descField, queue: OperationQueue.main) { (notification) in
+                self.saveButton.isEnabled = self.descField.text != newTask.desc
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: nameField, queue: OperationQueue.main) { (notification) in
+            self.saveButton.isEnabled = self.nameField.text != self.newTask?.name && self.nameField.text != ""
+        }
     }
     
     // MARK: - Navigation
@@ -134,16 +194,61 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
             let name = nameField.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             let desc = descField.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             let length = getHourFromDatePicker(timePicker) as Double
+            let state = activeSwitch.isOn
+            
+            self.dismissKeyboard()
             
             // Editing task
             if inEdit {
                 newTask = Task(name: name, desc: desc, length: length, id: primaryCount)
+                newTask?.state = state
                 
             // New task
             } else {
-                print("New task has id \(primaryCount + 1)")
                 newTask = Task(name: name, desc: desc, length: length, id: primaryCount + 1)
+                newTask?.state = state
             }
+        }
+    }
+    
+    // MARK: - Actions
+    
+    @IBAction func timePickerDidChange(_ sender: Any) {
+        
+        if getHourFromDatePicker(timePicker) as Double != newTask?.length && nameField.text != "" {
+            print("button should be enabled")
+            saveButton.isEnabled = true
+        } else {
+            saveButton.isEnabled = false
+        }
+    }
+    
+    // MARK: - Helper
+    
+    func drawSeparator(forCell cell: UITableViewCell) {
+        
+        let separator = UIView(frame: CGRect(x: cell.frame.size.width * 0.04, y: cell.frame.size.height - 1, width: cell.frame.size.width, height: 1))
+        separator.backgroundColor = UIColor.white
+        cell.addSubview(separator)
+    }
+    
+    func setDateToPicker(task: Task?) {
+        var components = DateComponents()
+        let calendar = Calendar.current
+        
+        if let task = task {
+            
+            let taskLength = Int(task.length)
+            
+            components.hour = taskLength / 60
+            components.minute = taskLength % 60
+            
+            timePicker.setDate(calendar.date(from: components)!, animated: false)
+        } else {
+            components.hour = 0
+            components.minute = 0
+            
+            timePicker.setDate(calendar.date(from: components)!, animated: false)
         }
     }
     
@@ -152,12 +257,15 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
         let calendar = Calendar.current
         let components = (calendar as NSCalendar).components([NSCalendar.Unit.hour, NSCalendar.Unit.minute] , from: datePicker.date)
         
+        print("timePicker was \(components.minute! + components.hour! * 60) minutes")
         return Double(components.minute! + components.hour! * 60)
     }
     
     func switchValueChanged() {
-        if inEdit {
+        if inEdit && activeSwitch.isOn != newTask?.state {
             self.saveButton.isEnabled = true
+        } else {
+            self.saveButton.isEnabled = false
         }
     }
 }

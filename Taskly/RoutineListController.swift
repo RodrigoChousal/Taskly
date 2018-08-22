@@ -9,32 +9,39 @@
 import UIKit
 import RealmSwift
 import DZNEmptyDataSet
+import UserNotifications
 
+@available(iOS 10.0, *)
 class RoutineListController: UIViewController, UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     
     let realm = try! Realm()
-
-    @IBOutlet weak var tableView: UITableView!
     
-    let backgroundView = UIView()
-    
-    var allRoutines: [[Routine]] = [[]]
-    var queriedRoutines: [Routine] = []
-    
-    var headers: [String] = []
-    
-    var idCount: Int = 0
-
-    var selectedRoutine: Routine = Routine(name: "", timeOfDay: .None, id: 0)
-    var editingRoutine: Bool = false
-    
-    let cellHeight = CGFloat(75)
-    let spaceHeight = CGFloat(25)
+    // Constants
+    let cellHeight = CGFloat(70)
+    let headerHeight =  CGFloat(40)
+    let spaceHeight = CGFloat(30)
     
     let yellowColor = UIColor(red: 243/255, green: 222/255, blue: 0/255, alpha: 1.0)
     let orangeColor = UIColor(red: 223/255, green: 111/255, blue: 48/255, alpha: 1.0)
-    let blueColor = UIColor(red: 40/255, green: 50/255, blue: 77/255, alpha: 1.0)
-    let grayColor = UIColor(red: 110/255, green: 110/255, blue: 110/255, alpha: 1.0)
+    let blueColor = UIColor(red: 0/255, green: 20/255, blue: 40/255, alpha: 1.0)
+    let darkGrayColor = UIColor(red: 110/255, green: 110/255, blue: 110/255, alpha: 1.0)
+    let lightGrayColor = UIColor(red: 199/255, green: 199/255, blue: 204/255, alpha: 1.0)
+    
+    // Data
+    var allRoutines: [[Routine]] = [[]]
+    var queriedRoutines: [Routine] = []
+    
+    var selectedRoutine: Routine = Routine(name: "", timeOfDay: .None, reps: [], id: 0)
+    var editingRoutine: Bool = false
+    var idCount: Int = 0
+    
+    // View management
+    var headers: [String] = []
+    
+    var actionRowView = UIView()
+    var actionRowBackgrounds: [[UIView]] = []
+    
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,32 +52,31 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.emptyDataSetSource = self
         tableView.emptyDataSetDelegate = self
         
-        backgroundView.frame = view.frame
-//        backgroundView.addBlurredBackground(blurRadius: 15, withImageNamed: "background2")
-        
-        view.addSubview(backgroundView)
-        view.sendSubview(toBack: backgroundView)
-        
-        loadRoutines()
-        
+        view.setBackground()
+                    
+        tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0)
         tableView.backgroundColor = UIColor.clear
-        tableView.tableFooterView = UIView()
-        tableView.sectionHeaderHeight = 38
+        
+        // View which displays fake delete and edit buttons
+        actionRowView.frame.size = tableView.frame.size
+        tableView.addSubview(actionRowView)
+        tableView.sendSubview(toBack: actionRowView)
+                        
+        // From realm
+        loadRoutines()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        editingRoutine = false
-        
-        if allRoutines.isEmpty {
-            tableView.alpha = 0.0
-        } else {
-            tableView.alpha = 1.0
+                
+        // Unselect any selected row
+        let selection = tableView.indexPathForSelectedRow
+        if (selection != nil) {
+            let cell = tableView.cellForRow(at: selection!) as! RoutineCell
+            unhighlightCell(cell: cell, atIndex: selection!)
+            tableView.deselectRow(at: selection!, animated: true)
         }
         
-        loadRoutines()
-        setTableViewHeight(table: tableView)
         tableView.reloadData()
     }
     
@@ -94,54 +100,40 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return allRoutines[section].count + 1
+        return allRoutines[section].count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        let section = (indexPath as NSIndexPath).section
-        let row = (indexPath as NSIndexPath).row
-        
-        if row == allRoutines[section].count {
-            return spaceHeight
-        }
-        
         return cellHeight
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RoutineCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RoutineCell", for: indexPath) as! RoutineCell
         
         let section = (indexPath as NSIndexPath).section
         let row = (indexPath as NSIndexPath).row
         
-        // If isn't last (clear) cell
-        if row != allRoutines[section].count {
-            
-            // Set title
-            cell.textLabel?.text = allRoutines[section][row].name
-            
-            // Format
-            cell.textLabel?.font = UIFont(name: "Avenir-Heavy", size: 21.0)
-            switch allRoutines[section][row].timeOfDay {
-                
-                case "Morning": cell.textLabel?.textColor = yellowColor
-                case "Afternoon": cell.textLabel?.textColor = orangeColor
-                case "Evening": cell.textLabel?.textColor = blueColor
-                
-                default: cell.textLabel?.textColor = grayColor
-            }
-            
-            cell.accessoryType = .disclosureIndicator
-            cell.isUserInteractionEnabled = true
-            
+        // Set title
+        cell.nameLabel.text = allRoutines[section][row].name
+        
+        // Set task amount
+        cell.taskAmountLabel.text = allRoutines[section][row].taskCountString
+        
+        // Set length
+        if allRoutines[section][row].totalLength > 0 {
+            cell.timeLabel.text = minutesToString(minutes: allRoutines[section][row].totalLength)
         } else {
-            cell.accessoryType = .none
-            cell.isUserInteractionEnabled = false
+            cell.timeLabel.text = ""
         }
         
-        return cell
+        // Set disclosure indicator
+        cell.disclosureImageView.image = #imageLiteral(resourceName: "disclosure_indicator")
+        
+        // Format text colors
+        unhighlightCell(cell: cell, atIndex: indexPath)
+        
+        return cell as UITableViewCell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -149,33 +141,42 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         let section = (indexPath as NSIndexPath).section
         let row = (indexPath as NSIndexPath).row
         
-        if cell.bounds.height == spaceHeight { // Overkill!
-            cell.textLabel?.text = ""
-            cell.alpha = 0.0
-            cell.backgroundView?.backgroundColor = UIColor.clear
-            cell.backgroundColor = UIColor.clear
-            cell.contentView.backgroundColor = UIColor.clear
+        cell.layer.mask = nil
+        
+        // If last cell, make corners round
+        if row == allRoutines[section].count - 1 {
             
-        } else {
+            // Rounded corners
+            let maskPath = UIBezierPath(roundedRect: cell.bounds,
+                                        byRoundingCorners: [.bottomLeft, .bottomRight],
+                                        cornerRadii: CGSize(width: 10.0, height: 10.0))
+            let shape = CAShapeLayer()
+            shape.path = maskPath.cgPath
             
-            cell.backgroundColor = UIColor.white
-            cell.layer.mask = nil
-            
-            if row == allRoutines[section].count - 1 {
-                
-                let maskPath = UIBezierPath(roundedRect: cell.bounds,
-                                            byRoundingCorners: [.bottomLeft, .bottomRight],
-                                            cornerRadii: CGSize(width: 10.0, height: 10.0))
-                let shape = CAShapeLayer()
-                shape.path = maskPath.cgPath
-                cell.layer.mask = shape // deletes delete button :(
-            }
+            cell.layer.masksToBounds = true
+            cell.layer.mask = shape
         }
+        
+        // Create action backgrounds
+        if actionRowBackgrounds[section][row].accessibilityIdentifier != "created" {
+            
+            let cellActionBackground = createBackgroundActionView(forCell: cell)
+
+            cellActionBackground.tag = 1000 + indexPath.section * 100 + indexPath.row // Change?
+
+            actionRowBackgrounds[indexPath.section][indexPath.row] = cellActionBackground
+
+            actionRowView.addSubview(cellActionBackground)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return headerHeight
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 40))
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: headerHeight))
         
         var icon = UIImageView()
         
@@ -205,19 +206,35 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             
             } else {
                 
-                headerView.backgroundColor = grayColor
+                headerView.backgroundColor = darkGrayColor
             }
             
             headerView.addSubview(icon)
+            icon.center.y = headerView.frame.size.height / 2
         }
         
         // title
-        let sectionLabel = UILabel(frame: CGRect(x: 13 + icon.bounds.size.width + 13, y: headerView.bounds.size.height/2 - 10, width: tableView.bounds.size.width, height: 18))
+        let sectionLabel = UILabel(frame: CGRect(x: 13 + icon.bounds.size.width + 13, y: headerView.bounds.size.height/2 - 10, width: tableView.bounds.size.width / 2, height: headerView.bounds.size.height))
         sectionLabel.text = headers[section]
         sectionLabel.textColor = UIColor.white
         sectionLabel.font = UIFont(name: "Avenir-Medium", size: 15)
         
-        // round corners
+        headerView.addSubview(sectionLabel)
+        sectionLabel.center.y = headerView.frame.size.height / 2
+        
+        // time
+        let timeLabel = UILabel(frame: CGRect(x: 0, y: 0, width: headerView.bounds.size.width / 3, height: headerView.bounds.size.height))
+        timeLabel.center.y = headerView.frame.size.height / 2
+        timeLabel.frame.origin.x = headerView.frame.size.width - (timeLabel.frame.width + 10)
+        timeLabel.textAlignment = .right
+        timeLabel.textColor = UIColor.white
+        timeLabel.font = UIFont(name: "Avenir-Light", size: 13)
+        
+        timeLabel.text = getSectionLength(for: section)
+        
+        headerView.addSubview(timeLabel)
+        
+        // Make corners round
         let maskPath = UIBezierPath(roundedRect: headerView.bounds,
                                     byRoundingCorners: [.topLeft, .topRight],
                                     cornerRadii: CGSize(width: 10.0, height: 10.0))
@@ -225,28 +242,55 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         shape.path = maskPath.cgPath
         headerView.layer.mask = shape
         
-        headerView.addSubview(sectionLabel)
-        
         return headerView
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        
         selectedRoutine = allRoutines[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
-        
-        print("Selected routine is now \(selectedRoutine.name)")
         
         return indexPath
     }
     
+    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! RoutineCell
+        highlightCell(cell: cell, atIndex: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! RoutineCell
+        highlightCell(cell: cell, atIndex: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! RoutineCell
+        unhighlightCell(cell: cell, atIndex: indexPath)
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // Unhighlight all cells if scrolling
+        if let indexList = tableView.indexPathsForVisibleRows {
+            
+            for index in indexList {
+                if let cell = tableView.cellForRow(at: index) {
+                    unhighlightCell(cell: cell as! RoutineCell, atIndex: index)
+                    tableView.deselectRow(at: index, animated: true)
+                }
+                
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+        // Format delete action
+        let delete = UITableViewRowAction(style: .destructive, title: "           ") { action, index in
             self.deleteRoutine(indexPath: indexPath as NSIndexPath)
         }
-        delete.backgroundColor = UIColor.red
+        delete.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "delete_wbg"))
         
-        let edit = UITableViewRowAction(style: .default, title: "Edit") { action, index in
+        // Format edit action
+        let edit = UITableViewRowAction(style: .default, title: "       ") { action, index in
             self.editingRoutine = true
             self.selectedRoutine = self.allRoutines[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
             
@@ -254,7 +298,12 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
                 self.performSegue(withIdentifier: "routineDetail", sender: self)
             }
         }
-        edit.backgroundColor = UIColor.orange
+        edit.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "edit_wbg"))
+        
+        // Unhighlight selected cell
+        if let cell = tableView.cellForRow(at: indexPath) {
+            unhighlightCell(cell: cell as! RoutineCell, atIndex: indexPath)
+        }
         
         return [ delete, edit ]
     }
@@ -267,7 +316,7 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.0000001
+        return spaceHeight
     }
     
     // MARK: - Empty Data Management
@@ -280,32 +329,17 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let str = "Add a routine to get started!"
-        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.body).withSize(18.0), NSForegroundColorAttributeName: UIColor.white]
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline).withSize(18.0), NSForegroundColorAttributeName: UIColor.white]
         return NSAttributedString(string: str, attributes: attrs)
     }
     
     func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
-        return UIImage(named: "Checklist")
+        return UIImage(named: "checklist")
     }
     
     func verticalOffset(forEmptyDataSet scrollView: UIScrollView!) -> CGFloat {
-        return -tableView.frame.size.height / 4.0
+        return -view.frame.size.height / 15
     }
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
     // MARK: - Navigation
 
@@ -315,7 +349,12 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             let destinationVC = segue.destination as! TaskListController
             destinationVC.routine = self.selectedRoutine
             
+            let backItem = UIBarButtonItem()
+            backItem.title = ""
+            navigationItem.backBarButtonItem = backItem
+            
         } else if segue.identifier == "routineDetail" {
+            
             let navController = segue.destination as! UINavigationController
             let destinationVC = navController.viewControllers[0] as! RoutineDetailTableViewController
             
@@ -327,44 +366,98 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             } else {
                 destinationVC.primaryCount = idCount
             }
+            
+        } else if segue.identifier == "about" {
+            
+            let destinationVC = segue.destination as! AboutViewController
+            destinationVC.fromHome = true
+            
+            // Capture screenshot for blurring
+            if let layer = UIApplication.shared.keyWindow?.layer {
+                
+                let scale = UIScreen.main.scale
+                UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
+                layer.render(in: UIGraphicsGetCurrentContext()!)
+                
+                let capture = UIGraphicsGetImageFromCurrentImageContext()
+                
+                UIGraphicsEndImageContext()
+                
+                if let screenshot = capture {
+                    destinationVC.backgroundSnapshot = screenshot
+                }
+            }
         }
     }
     
     @IBAction func cancel(_ segue:UIStoryboardSegue) {
-        
+        editingRoutine = false
     }
     
     @IBAction func save(_ segue:UIStoryboardSegue) {
         
         if let routineDetailTVC = segue.source as? RoutineDetailTableViewController {
 
-            if let routine = routineDetailTVC.newRoutine {
+            let routine = routineDetailTVC.newRoutine
+            var overwriting = Bool()
+            
+            if routineDetailTVC.inEdit {
+                // Update all values except tasks
+                try! self.realm.write {
+                    realm.create(Routine.self, value: ["id": routine.id, "name": routine.name, "timeOfDay": routine.timeOfDay, "reps": routine.reps, "remind": routine.remind], update: true)
+                }
+                
+                // Finish editing
+                editingRoutine = false
+                overwriting = true
+                
+            } else {
+                // Add new routine
+                try! self.realm.write {
+                    self.realm.add(routine)
+                }
                                 
-                if routineDetailTVC.inEdit {
-                    // Update all values except tasks
-                    try! self.realm.write {
-                        realm.create(Routine.self, value: ["id": routine.id, "name": routine.name, "timeOfDay": routine.timeOfDay, "reps": routine.reps, "remind": routine.remind], update: true)
-                    }
-                    
-                    // Finish editing
-                    editingRoutine = false
-                    
-                } else {
-                    // Add new routine
-                    try! self.realm.write {
-                        self.realm.add(routine)
+                overwriting = false
+            }
+            
+            let delegate = UIApplication.shared.delegate as? AppDelegate
+            
+            if routineDetailTVC.remindSwitch.isOn {
+                let selectedDate = routineDetailTVC.remindTimePicker.date
+                let entireWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                
+                // Remove all possible notifications
+                if overwriting {
+                    for rep in entireWeek {
+                        delegate?.removeNotification(withIdentifier: String(routine.id) + "." + rep)
                     }
                 }
                 
-                DispatchQueue.main.async(execute: {
-                    self.loadRoutines()
-                    self.tableView.reloadData()
-                })
+                // Schedule new remind weekday values
+                delegate?.scheduleNotification(at: selectedDate, every: routine.reps, forRoutine: routine, id: String(routine.id))
+                
+                // Rewrite routine
+                try! self.realm.write {
+                    realm.create(Routine.self, value: ["id": routine.id, "name": routine.name, "timeOfDay": routine.timeOfDay, "reps": routine.reps, "remind": routine.remind], update: true)
+                }
+                
+            } else {
+                // User switched off reminders
+                delegate?.removeNotification(withIdentifier: String(routine.id))
             }
+            
+            DispatchQueue.main.async(execute: {
+                self.loadRoutines()
+                self.tableView.reloadData()
+            })
         }
     }
     
-    // MARK: - Content Load & Sort
+    @IBAction func prepareForUnwind(segue: UIStoryboardSegue){
+        
+    }
+        
+    // MARK: - Content Management
     
     // Requests all routines from Realm
     func loadRoutines() {
@@ -380,6 +473,8 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         // Clean slate
         allRoutines.removeAll()
         headers.removeAll()
+        actionRowBackgrounds.removeAll()
+        actionRowView.subviews.forEach({ $0.removeFromSuperview() })
         
         // Temporary arrays used for filtering
         let morningRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'Morning'"))
@@ -387,70 +482,118 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         let eveningRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'Evening'"))
         let noTimeRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'None'"))
         
-        // Checks if a section should be created and repopulates
+        // Checks if a section should be created and repopulates necessary arrays
         if !morningRoutines.isEmpty {
             headers.append(morningRoutines[0].timeOfDay)
             allRoutines.append(morningRoutines)
+            
+            actionRowBackgrounds.append([])
+            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: morningRoutines.count)
         }
         
         if !afternoonRoutines.isEmpty {
             headers.append(afternoonRoutines[0].timeOfDay)
             allRoutines.append(afternoonRoutines)
+            
+            actionRowBackgrounds.append([])
+            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: afternoonRoutines.count)
         }
         
         if !eveningRoutines.isEmpty {
             headers.append(eveningRoutines[0].timeOfDay)
             allRoutines.append(eveningRoutines)
+            
+            actionRowBackgrounds.append([])
+            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: eveningRoutines.count)
         }
         
         if !noTimeRoutines.isEmpty {
             headers.append(noTimeRoutines[0].timeOfDay)
             allRoutines.append(noTimeRoutines)
+            
+            actionRowBackgrounds.append([])
+            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: noTimeRoutines.count)
         }
-        
-        
     }
     
-    func deleteRoutine(indexPath: NSIndexPath) { // add delete button inside editing
+    func deleteRoutine(indexPath: NSIndexPath) {
         
-        var indexP = indexPath as IndexPath
+        var wasLastRoutine: Bool = false
+        let deletingRoutine = allRoutines[(indexPath).section][(indexPath).row]
         
-        let beforeDeleting = realm.objects(Routine.self).count
-        print("There are \(beforeDeleting) before delete")
+        // Notifications
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        for rep in deletingRoutine.reps {
+            delegate?.removeNotification(withIdentifier: String(deletingRoutine.id) + "." + rep)
+        }
         
         // From persistent storage
         try! realm.write {
-            realm.delete(allRoutines[(indexPath).section][(indexPath).row])
+            for task in deletingRoutine.tasks {
+                realm.delete(task)
+            }
+            realm.delete(deletingRoutine)
         }
         
         // From local storage
         allRoutines[(indexPath).section].remove(at: (indexPath).row)
+
+        CATransaction.begin()
         
-        let remainingRoutines = realm.objects(Routine.self).count
-        print("There are \(remainingRoutines) after delete")
+        CATransaction.setCompletionBlock({
+            
+            if wasLastRoutine {
+                self.actionRowBackgrounds.remove(at: indexPath.section)
+            }
+            
+            for cell in self.tableView.visibleCells {
+                
+                let index = self.tableView.indexPath(for: cell)!
+                
+                let cellActionBackground = self.createBackgroundActionView(forCell: cell)
+                cellActionBackground.tag = 1000 + index.section * 100 + index.row
+
+                self.actionRowBackgrounds[index.section][index.row] = cellActionBackground
+
+                self.actionRowView.addSubview(cellActionBackground)
+            }
+        })
+        
+        tableView.beginUpdates()
         
         // From view
         tableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
         
-        // If deleting last cell in section but not only, draw curved edges
-        if indexP.row == allRoutines[indexPath.section].count && indexP.row != 0 {
+        tableView.endUpdates()
+        
+        // Remove and reload action backgrounds
+        actionRowBackgrounds[indexPath.section].remove(at: indexPath.row)
+        actionRowView.subviews.forEach({ $0.removeFromSuperview() })
+        
+        CATransaction.commit()
+        
+        // If deleting last cell in section but not the only one, draw curved edges
+        if indexPath.row == allRoutines[indexPath.section].count && indexPath.row != 0 {
             
-            indexP.row = allRoutines[indexPath.section].count - 1
+            var newLastIndex = indexPath as IndexPath
             
-            let cell = tableView.cellForRow(at: indexP)!
+            newLastIndex.row -= 1
+            
+            let cell = tableView.cellForRow(at: newLastIndex)!
             
             let maskPath = UIBezierPath(roundedRect: cell.bounds,
                                         byRoundingCorners: [.bottomLeft, .bottomRight],
                                         cornerRadii: CGSize(width: 10.0, height: 10.0))
             let shape = CAShapeLayer()
             shape.path = maskPath.cgPath
-            cell.layer.mask = shape // deletes delete button :(
-            
+            cell.layer.mask = shape
         }
         
         // If only cell in section, delete section
         if allRoutines[indexPath.section].count == 0 {
 
+            wasLastRoutine = true
+            
             // From presistent storage
             try! realm.write {
                 realm.delete(allRoutines[(indexPath).section])
@@ -465,17 +608,122 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             sectionSet.insert(indexPath.section)
             tableView.deleteSections(sectionSet, with: .fade)
         }
+        
+        actionRowView.frame.size = tableView.frame.size
     }
     
-    func setTableViewHeight(table: UITableView) {
-        let headersHeight = table.sectionHeaderHeight
+    func highlightCell(cell: RoutineCell, atIndex index: IndexPath) {
         
-        let numberOfHeaders = CGFloat(headers.count)
-        let numberOfCells = CGFloat(queriedRoutines.count)
+        let section = index.section
+        let row = index.row
         
-        let calculatedHeight = headersHeight * numberOfHeaders + cellHeight * numberOfCells + spaceHeight * numberOfHeaders
+        switch allRoutines[section][row].timeOfDay {
+            
+        case "Morning":
+            cell.backgroundColor = yellowColor
+            
+        case "Afternoon":
+            cell.backgroundColor = orangeColor
+            
+        case "Evening":
+            cell.backgroundColor = blueColor
+            
+        default:
+            cell.backgroundColor = darkGrayColor
+        }
         
-        table.frame = CGRect(x: table.frame.origin.x, y: table.frame.origin.y, width: table.frame.size.width, height: calculatedHeight)
+        cell.nameLabel.textColor = UIColor.white
+        cell.timeLabel.textColor = UIColor.white
+        cell.taskAmountLabel.textColor = UIColor.white
+        
+        cell.disclosureImageView.image = #imageLiteral(resourceName: "white_disclosure")
+    }
+    
+    func unhighlightCell(cell: RoutineCell, atIndex index: IndexPath) {
+        
+        let section = index.section
+        let row = index.row
+        
+        cell.backgroundColor = UIColor.white
+        
+        switch allRoutines[section][row].timeOfDay {
+            
+        case "Morning":
+            cell.nameLabel.textColor = yellowColor
+            cell.taskAmountLabel.textColor = lightGrayColor
+            cell.timeLabel.textColor = lightGrayColor
+            
+        case "Afternoon":
+            cell.nameLabel.textColor = orangeColor
+            cell.taskAmountLabel.textColor = lightGrayColor
+            cell.timeLabel.textColor = lightGrayColor
+            
+        case "Evening":
+            cell.nameLabel.textColor = blueColor
+            cell.taskAmountLabel.textColor = lightGrayColor
+            cell.timeLabel.textColor = lightGrayColor
+            
+        default:
+            cell.nameLabel.textColor = darkGrayColor
+            cell.taskAmountLabel.textColor = lightGrayColor
+            cell.timeLabel.textColor = lightGrayColor
+            
+        }
+        
+        cell.disclosureImageView.image = #imageLiteral(resourceName: "disclosure_indicator")
+
+    }
+    
+    func createBackgroundActionView(forCell cell: UITableViewCell) -> UIView {
+        
+        let actionBg = UIImageView(image: #imageLiteral(resourceName: "swiped_cell"))
+        actionBg.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width: cell.frame.size.width, height: cell.frame.size.height * 1.04)
+
+        actionBg.accessibilityIdentifier = "created"
+        
+        return actionBg
+    }
+    
+    // MARK: - Helper Methods
+    
+    func secondsToHoursMinutesSeconds (_ seconds : Int) -> (Int, Int, Int) {
+        return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
+    }
+    
+    func minutesToString (minutes: Int) -> String {
+        
+        let hr = minutes / 60
+        let min = minutes % 60
+        
+        var hourString = ""
+        var minString = ""
+        
+        switch hr {
+            
+        case 0: hourString = ""
+        case 1: hourString = "\(hr) hr "
+            
+        default: hourString = "\(hr) hrs "
+        }
+        
+        if min > 0 {
+            minString = "\(min) min"
+        } else {
+            
+            minString = ""
+        }
+        
+        return hourString + minString
+    }
+    
+    func getSectionLength(for section: Int) -> String {
+        var timeCount: Int = 0
+        
+        for routine in allRoutines[section] {
+            timeCount += routine.totalLength
+        }
+        
+        return minutesToString(minutes: timeCount)
     }
     
     // Finds largest unique key
