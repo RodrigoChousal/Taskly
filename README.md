@@ -2,8 +2,8 @@
 Taskly is an iOS app for managing routine tasks and standardize the time it takes for you to complete them. By gamifying the user's standard routines, the app makes it easier to create lasting habits, while being precise with the time it takes to complete each individual task.
 
 ## Screenshots
-![Home](https://imgur.com/K6WjzN0.png =250x)
-![In Progress](https://i.imgur.com/Wg4sncX.png =250x)
+![Home](https://imgur.com/K6WjzN0.png)
+![In Progress](https://i.imgur.com/Wg4sncX.png)
 
 
 ## Getting Started
