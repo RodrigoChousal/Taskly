@@ -17,11 +17,12 @@ class RoutineTimeTableViewController: UITableViewController, UINavigationControl
         super.viewDidLoad()
             
         navigationController?.delegate = self
-        
-        view.setBackground()
-        
+		
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
-        
+		
+		DispatchQueue.main.async {
+			self.tableView.setBackground()
+		}
         tableView.backgroundView?.backgroundColor = UIColor.clear
         tableView.backgroundColor = UIColor.clear
     }
@@ -66,5 +67,4 @@ class RoutineTimeTableViewController: UITableViewController, UINavigationControl
             lastSelectedIndexPath = indexPath
         }
     }
-
 }

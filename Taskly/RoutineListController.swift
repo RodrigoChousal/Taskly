@@ -96,6 +96,7 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		print("CELL HEIGHT " + indexPath.section.description)
         return cellHeight
     }
 
@@ -151,11 +152,11 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return headerHeight
+		return headerHeight
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
+		
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: headerHeight))
         
         var icon = UIImageView()
@@ -290,9 +291,6 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
-    }
-
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -479,6 +477,8 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func deleteRoutine(indexPath: NSIndexPath) {
+		
+		print("Deleting routine at indexpath " + indexPath.description)
         
         let deletingRoutine = allRoutines[(indexPath).section][(indexPath).row]
         
@@ -499,20 +499,16 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         // From local storage
         allRoutines[(indexPath).section].remove(at: (indexPath).row)
 		
-        // From view
-		tableView.beginUpdates()
-        tableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
-        tableView.endUpdates()
-        
+		
         // If deleting last cell in section but not the only one, draw curved edges
         if indexPath.row == allRoutines[indexPath.section].count && indexPath.row != 0 {
-            
+
             var newLastIndex = indexPath as IndexPath
-            
+
             newLastIndex.row -= 1
-            
+
             let cell = tableView.cellForRow(at: newLastIndex)!
-            
+
             let maskPath = UIBezierPath(roundedRect: cell.bounds,
                                         byRoundingCorners: [.bottomLeft, .bottomRight],
                                         cornerRadii: CGSize(width: 10.0, height: 10.0))
@@ -520,20 +516,27 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             shape.path = maskPath.cgPath
             cell.layer.mask = shape
         }
-        
+		
+		// From view
         // If only cell in section, delete section
-        if allRoutines[indexPath.section].count == 0 {
+        if allRoutines[indexPath.section].count != 0 {
+			tableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
+		} else {
+			// From presistent storage
+			try! realm.write {
+				realm.delete(allRoutines[(indexPath).section])
+			}
 			
-            // From presistent storage
-            try! realm.write {
-                realm.delete(allRoutines[(indexPath).section])
-            }
-            
-            // From local storage
-            allRoutines.remove(at: indexPath.section)
-            headers.remove(at: indexPath.section)
-        }
-        
+			// From local storage
+			allRoutines.remove(at: indexPath.section)
+			headers.remove(at: indexPath.section)
+			
+			// From view
+			var sectionSet = IndexSet()
+			sectionSet.insert(indexPath.section)
+			tableView.deleteSections(sectionSet, with: .fade)
+		}
+		
     }
     
     func highlightCell(cell: RoutineCell, atIndex index: IndexPath) {
@@ -596,16 +599,6 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.disclosureImageView.image = #imageLiteral(resourceName: "disclosure_indicator")
 
-    }
-    
-    func createBackgroundActionView(forCell cell: UITableViewCell) -> UIView {
-        
-        let actionBg = UIImageView(image: #imageLiteral(resourceName: "swiped_cell"))
-        actionBg.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width: cell.frame.size.width, height: cell.frame.size.height * 1.04)
-
-        actionBg.accessibilityIdentifier = "created"
-        
-        return actionBg
     }
     
     // MARK: - Helper Methods

@@ -30,14 +30,13 @@ class RepeatRoutineTableViewController: UITableViewController, UINavigationContr
                 
         navigationController?.delegate = self
         
-        view.setBackground()
+		DispatchQueue.main.async {
+			self.tableView.setBackground()
+		}
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         
         selectedRows = getSelectedRows(selectedCategories: selectedCategories)
-        
-        tableView.backgroundView?.backgroundColor = UIColor.clear
-        tableView.backgroundColor = UIColor.clear
     }
     
     override func didReceiveMemoryWarning() {

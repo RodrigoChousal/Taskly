@@ -41,16 +41,16 @@ extension UIView {
         backView.clipsToBounds = true
         backView.frame = self.frame
         backView.frame.origin.y = 0
-        
+
         if image != #imageLiteral(resourceName: "default_bg") {
             let grayView = UIView(frame: backView.frame)
             grayView.frame.origin.y = 0
             grayView.backgroundColor = UIColor(red: 144/255, green: 144/255, blue: 144/255, alpha: 0.3)
             backView.addSubview(grayView)
         }
-        
+
         backView.accessibilityIdentifier = "backgroundView"
-        
+		
         self.addSubview(backView)
         self.sendSubviewToBack(backView)
     }

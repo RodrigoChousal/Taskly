@@ -37,11 +37,11 @@ class RoutineDetailTableViewController: UITableViewController, UITextFieldDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+		
         nameField.delegate = self
-        
-        view.setBackground()
-        
+		tableView.delegate = self
+		tableView.dataSource = self
+		
         drawSeparator(forCell: nameCell)
         drawSeparator(forCell: timeCell)
         drawSeparator(forCell: repeatCell)
@@ -258,6 +258,8 @@ class RoutineDetailTableViewController: UITableViewController, UITextFieldDelega
                 remindTimePicker.countDownDuration = newRoutine.remind as TimeInterval
             }
         }
+		
+		navigationController?.view.setBackground()
     }
     
     func checkForChanges() {

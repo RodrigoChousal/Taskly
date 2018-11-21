@@ -40,8 +40,10 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
         
         nameField.delegate = self
         descField.delegate = self
-        
-        view.setBackground()
+		
+		DispatchQueue.main.async {
+			self.view.setBackground()
+		}
         
         drawSeparator(forCell: nameCell)
         drawSeparator(forCell: notesCell)
