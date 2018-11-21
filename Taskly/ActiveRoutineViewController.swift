@@ -223,8 +223,11 @@ class ActiveRoutineViewController: UIViewController {
             
             // schedule notification for task
             if let delegate = UIApplication.shared.delegate as? AppDelegate {
-                delegate.scheduleNotification(at: Date(), tasks: [nextTask, activeTasks[currentTaskPlace + 1]])
-                print("scheduled notification for task \(nextTask.name)")
+				if (currentTaskPlace + 1) < activeTasks.count {
+					delegate.scheduleNotification(at: Date(), tasks: [nextTask, activeTasks[currentTaskPlace + 1]])
+				} else {
+					delegate.scheduleNotification(at: Date(), tasks: [nextTask])
+				}
             }
             
             // remove notification for previous task

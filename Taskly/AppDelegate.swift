@@ -67,40 +67,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let calendar = Calendar.current
         
         var triggerLength = 0.0
-        
-        let task = tasks[0]
-        let name = tasks[1].name
-        
-        let taskLength = task.length * 60
-        triggerLength += taskLength
-        
-        if let newDate = calendar.date(byAdding: .second, value: Int(triggerLength), to: date) {
-            
-            let day = calendar.component(.day, from: newDate)
-            let hour = calendar.component(.hour, from: newDate)
-            let minutes = calendar.component(.minute, from: newDate)
-            let seconds = calendar.component(.second, from: newDate)
-            
-            components.day = day
-            components.hour = hour
-            components.minute = minutes
-            components.second = seconds
-            
-            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-            
-            let content = UNMutableNotificationContent()
-            content.title = name
-            content.body = "This is your next task!"
-            content.sound = UNNotificationSound.default
-            
-            let request = UNNotificationRequest(identifier: name, content: content, trigger: trigger)
-            
-            UNUserNotificationCenter.current().add(request) {(error) in
-                if let error = error {
-                    print("Uh oh! We had an error: \(error)")
-                }
-            }
-        }
+		
+		var name = "You have finished this routine"
+		var contentBody = "Congratulations!"
+		if tasks.count == 2 {
+			
+			contentBody = "This is your next task!"
+			name = tasks[1].name
+			
+			let task = tasks[0]
+			let taskLength = task.length * 60
+			triggerLength += taskLength
+			
+			if let newDate = calendar.date(byAdding: .second, value: Int(triggerLength), to: date) {
+				
+				let day = calendar.component(.day, from: newDate)
+				let hour = calendar.component(.hour, from: newDate)
+				let minutes = calendar.component(.minute, from: newDate)
+				let seconds = calendar.component(.second, from: newDate)
+				
+				components.day = day
+				components.hour = hour
+				components.minute = minutes
+				components.second = seconds
+				
+				let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+				
+				let content = UNMutableNotificationContent()
+				content.title = name
+				content.body = contentBody
+				content.sound = UNNotificationSound.default
+				
+				let request = UNNotificationRequest(identifier: name, content: content, trigger: trigger)
+				
+				UNUserNotificationCenter.current().add(request) {(error) in
+					if let error = error {
+						print("Uh oh! We had an error: \(error)")
+					}
+				}
+			}
+			
+		}
     }
     
     func removeNotification(withIdentifier identifier: String) {

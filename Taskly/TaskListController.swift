@@ -45,6 +45,8 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
         view.setBackground()
 
         goButton.setImage(#imageLiteral(resourceName: "begin_btn_pressed"), for: UIControl.State.highlighted)
+		goButton.layer.cornerRadius = 10
+		goButton.clipsToBounds = true
         
         self.navigationBar.title = routine.name
         
