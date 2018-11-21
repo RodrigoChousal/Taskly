@@ -37,10 +37,7 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     
     // View management
     var headers: [String] = []
-    
-    var actionRowView = UIView()
-    var actionRowBackgrounds: [[UIView]] = []
-    
+	
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -56,12 +53,7 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
                     
         tableView.contentInset = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0)
         tableView.backgroundColor = UIColor.clear
-        
-        // View which displays fake delete and edit buttons
-        actionRowView.frame.size = tableView.frame.size
-        tableView.addSubview(actionRowView)
-        tableView.sendSubviewToBack(actionRowView)
-                        
+		
         // From realm
         loadRoutines()
     }
@@ -155,18 +147,6 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             
             cell.layer.masksToBounds = true
             cell.layer.mask = shape
-        }
-        
-        // Create action backgrounds
-        if actionRowBackgrounds[section][row].accessibilityIdentifier != "created" {
-            
-            let cellActionBackground = createBackgroundActionView(forCell: cell)
-
-            cellActionBackground.tag = 1000 + indexPath.section * 100 + indexPath.row // Change?
-
-            actionRowBackgrounds[indexPath.section][indexPath.row] = cellActionBackground
-
-            actionRowView.addSubview(cellActionBackground)
         }
     }
     
@@ -452,11 +432,7 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             })
         }
     }
-    
-    @IBAction func prepareForUnwind(segue: UIStoryboardSegue){
-        
-    }
-        
+	
     // MARK: - Content Management
     
     // Requests all routines from Realm
@@ -469,13 +445,11 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
     // Sorts queried routines into morning, afternoon, evening & none in allRoutines
     // Creates headers for new sections as needed
     func sortRoutines() {
-        
+		
         // Clean slate
         allRoutines.removeAll()
         headers.removeAll()
-        actionRowBackgrounds.removeAll()
-        actionRowView.subviews.forEach({ $0.removeFromSuperview() })
-        
+		
         // Temporary arrays used for filtering
         let morningRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'Morning'"))
         let afternoonRoutines = Array(realm.objects(Routine.self).filter("timeOfDay = 'Afternoon'"))
@@ -486,39 +460,26 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         if !morningRoutines.isEmpty {
             headers.append(morningRoutines[0].timeOfDay)
             allRoutines.append(morningRoutines)
-            
-            actionRowBackgrounds.append([])
-            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: morningRoutines.count)
         }
         
         if !afternoonRoutines.isEmpty {
             headers.append(afternoonRoutines[0].timeOfDay)
             allRoutines.append(afternoonRoutines)
-            
-            actionRowBackgrounds.append([])
-            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: afternoonRoutines.count)
         }
-        
+
         if !eveningRoutines.isEmpty {
             headers.append(eveningRoutines[0].timeOfDay)
             allRoutines.append(eveningRoutines)
-            
-            actionRowBackgrounds.append([])
-            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: eveningRoutines.count)
         }
-        
+
         if !noTimeRoutines.isEmpty {
             headers.append(noTimeRoutines[0].timeOfDay)
             allRoutines.append(noTimeRoutines)
-            
-            actionRowBackgrounds.append([])
-            actionRowBackgrounds[actionRowBackgrounds.count - 1] = Array(repeating: UIView(), count: noTimeRoutines.count)
         }
     }
     
     func deleteRoutine(indexPath: NSIndexPath) {
         
-        var wasLastRoutine: Bool = false
         let deletingRoutine = allRoutines[(indexPath).section][(indexPath).row]
         
         // Notifications
@@ -537,40 +498,11 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         
         // From local storage
         allRoutines[(indexPath).section].remove(at: (indexPath).row)
-
-        CATransaction.begin()
-        
-        CATransaction.setCompletionBlock({
-            
-            if wasLastRoutine {
-                self.actionRowBackgrounds.remove(at: indexPath.section)
-            }
-            
-            for cell in self.tableView.visibleCells {
-                
-                let index = self.tableView.indexPath(for: cell)!
-                
-                let cellActionBackground = self.createBackgroundActionView(forCell: cell)
-                cellActionBackground.tag = 1000 + index.section * 100 + index.row
-
-                self.actionRowBackgrounds[index.section][index.row] = cellActionBackground
-
-                self.actionRowView.addSubview(cellActionBackground)
-            }
-        })
-        
-        tableView.beginUpdates()
-        
+		
         // From view
+		tableView.beginUpdates()
         tableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
-        
         tableView.endUpdates()
-        
-        // Remove and reload action backgrounds
-        actionRowBackgrounds[indexPath.section].remove(at: indexPath.row)
-        actionRowView.subviews.forEach({ $0.removeFromSuperview() })
-        
-        CATransaction.commit()
         
         // If deleting last cell in section but not the only one, draw curved edges
         if indexPath.row == allRoutines[indexPath.section].count && indexPath.row != 0 {
@@ -591,9 +523,7 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         
         // If only cell in section, delete section
         if allRoutines[indexPath.section].count == 0 {
-
-            wasLastRoutine = true
-            
+			
             // From presistent storage
             try! realm.write {
                 realm.delete(allRoutines[(indexPath).section])
@@ -602,14 +532,8 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
             // From local storage
             allRoutines.remove(at: indexPath.section)
             headers.remove(at: indexPath.section)
-            
-            // From view
-            var sectionSet = IndexSet()
-            sectionSet.insert(indexPath.section)
-            tableView.deleteSections(sectionSet, with: .fade)
         }
         
-        actionRowView.frame.size = tableView.frame.size
     }
     
     func highlightCell(cell: RoutineCell, atIndex index: IndexPath) {
