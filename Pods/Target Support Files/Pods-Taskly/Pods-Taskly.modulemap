@@ -1,0 +1,6 @@
+framework module Pods_Taskly {
+  umbrella header "Pods-Taskly-umbrella.h"
+
+  export *
+  module * { export * }
+}
