@@ -54,13 +54,13 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         
         view.setBackground()
                     
-        tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0)
+        tableView.contentInset = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0)
         tableView.backgroundColor = UIColor.clear
         
         // View which displays fake delete and edit buttons
         actionRowView.frame.size = tableView.frame.size
         tableView.addSubview(actionRowView)
-        tableView.sendSubview(toBack: actionRowView)
+        tableView.sendSubviewToBack(actionRowView)
                         
         // From realm
         loadRoutines()
@@ -312,7 +312,7 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         return true
     }
 
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -323,14 +323,14 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
 
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let str = "You have no routines"
-        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline).withSize(18.0), NSForegroundColorAttributeName: UIColor.white]
-        return NSAttributedString(string: str, attributes: attrs)
+        let attrs = [convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline).withSize(18.0), convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor): UIColor.white]
+        return NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attrs))
     }
     
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let str = "Add a routine to get started!"
-        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline).withSize(18.0), NSForegroundColorAttributeName: UIColor.white]
-        return NSAttributedString(string: str, attributes: attrs)
+        let attrs = [convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline).withSize(18.0), convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor): UIColor.white]
+        return NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attrs))
     }
     
     func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
@@ -735,4 +735,15 @@ class RoutineListController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

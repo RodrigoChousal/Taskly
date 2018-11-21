@@ -94,12 +94,12 @@ class RoutineDetailTableViewController: UITableViewController, UITextFieldDelega
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         // Limits character count in name field to 40
-        let currentCharacterCount = textField.text?.characters.count ?? 0
+        let currentCharacterCount = textField.text?.count ?? 0
         if range.length + range.location > currentCharacterCount {
             return false
         }
         
-        let newLength = currentCharacterCount + string.characters.count - range.length
+        let newLength = currentCharacterCount + string.count - range.length
         
         return newLength <= 40
     }
@@ -253,7 +253,7 @@ class RoutineDetailTableViewController: UITableViewController, UITextFieldDelega
             
             if newRoutine.remind != 0 {
                 remindSwitch.setOn(true, animated: true)
-                remindSwitch.addTarget(self, action: #selector(self.switchValueChanged), for: UIControlEvents.valueChanged)
+                remindSwitch.addTarget(self, action: #selector(self.switchValueChanged), for: UIControl.Event.valueChanged)
                 remindTimePicker.alpha = 1.0
                 remindTimePicker.countDownDuration = newRoutine.remind as TimeInterval
             }
@@ -268,7 +268,7 @@ class RoutineDetailTableViewController: UITableViewController, UITextFieldDelega
             saveButton.isEnabled = true
         }
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: nameField, queue: OperationQueue.main) { (notification) in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: nameField, queue: OperationQueue.main) { (notification) in
             self.saveButton.isEnabled = self.nameField.text != self.newRoutine.name
         }
     }
@@ -280,7 +280,7 @@ class RoutineDetailTableViewController: UITableViewController, UITextFieldDelega
         cell.addSubview(separator)
     }
     
-    func switchValueChanged() {
+    @objc func switchValueChanged() {
         if remindSwitch.isOn != newRoutine.shouldRemind {
             self.saveButton.isEnabled = true
         } else {
@@ -288,7 +288,7 @@ class RoutineDetailTableViewController: UITableViewController, UITextFieldDelega
         }
     }
     
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         if nameField.isFirstResponder {
             nameField.resignFirstResponder()
         }

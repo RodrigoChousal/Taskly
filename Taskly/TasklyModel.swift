@@ -10,20 +10,20 @@ import Foundation
 import RealmSwift
 
 class RealmString: Object {
-    dynamic var stringValue = ""
+    @objc dynamic var stringValue = ""
 }
 
 // Routine model
 class Routine: Object {
     
-    dynamic var id = 0
-    dynamic var name: String = ""
-    dynamic var timeOfDay: String = ""
-    dynamic var remind = 0.0
-    dynamic var shouldRemind: Bool = false
-    dynamic var streak: Int = 0
-    dynamic var lastCompletion: Date = Date()
-    dynamic var nextCompletion: Date {
+    @objc dynamic var id = 0
+    @objc dynamic var name: String = ""
+    @objc dynamic var timeOfDay: String = ""
+    @objc dynamic var remind = 0.0
+    @objc dynamic var shouldRemind: Bool = false
+    @objc dynamic var streak: Int = 0
+    @objc dynamic var lastCompletion: Date = Date()
+    @objc dynamic var nextCompletion: Date {
         
         // Weekday of last completion
         let lastWeekday = Int(Calendar.current.dateComponents([.weekday], from: lastCompletion).weekday!)
@@ -125,7 +125,7 @@ class Routine: Object {
 
         return nextCompletion
     }
-    dynamic var taskCountString: String {
+    @objc dynamic var taskCountString: String {
         if self.tasks.count > 1 {
             return "\(self.tasks.count) Tasks"
             
@@ -136,7 +136,7 @@ class Routine: Object {
             return "Empty"
         }
     }
-    dynamic var repDescription: String {
+    @objc dynamic var repDescription: String {
         
         var description = ""
         
@@ -191,7 +191,7 @@ class Routine: Object {
         
         return description
     }
-    dynamic var totalLength: Int {
+    @objc dynamic var totalLength: Int {
         
         var localCount: Double = 0
         
@@ -255,13 +255,13 @@ enum Week: String {
 // Task model
 class Task: Object {
     
-    dynamic var id = 0
-    dynamic var name: String = ""
-    dynamic var desc: String? = nil
-    dynamic var length: Double = 0.0
-    dynamic var state: Bool = true
-    dynamic var completed: Int = 0
-    dynamic var averageTime: Int = 0
+    @objc dynamic var id = 0
+    @objc dynamic var name: String = ""
+    @objc dynamic var desc: String? = nil
+    @objc dynamic var length: Double = 0.0
+    @objc dynamic var state: Bool = true
+    @objc dynamic var completed: Int = 0
+    @objc dynamic var averageTime: Int = 0
     
     let routine = LinkingObjects(fromType: Routine.self, property: "tasks")
     

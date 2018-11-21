@@ -83,13 +83,13 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        let currentCharacterCount = textField.text?.characters.count ?? 0
+        let currentCharacterCount = textField.text?.count ?? 0
         
         if range.length + range.location > currentCharacterCount || currentCharacterCount == 16 && string != "" {
             return false
         }
         
-        let newLength = currentCharacterCount + string.characters.count - range.length
+        let newLength = currentCharacterCount + string.count - range.length
         
         return newLength <= 25
     }
@@ -101,7 +101,7 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
         
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        if textView.text.characters.count == 0 {
+        if textView.text.count == 0 {
             lineCount = 1
         }
         
@@ -130,14 +130,14 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
         }
         
         // Changes lineCount if new line is deleted
-        if text == "" && textRect.maxX == 6.0 && textView.text.characters.count != 0 {
+        if text == "" && textRect.maxX == 6.0 && textView.text.count != 0 {
             lineCount -= 1
         }
         
         return true
     }
     
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 
@@ -174,14 +174,14 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
             
             setDateToPicker(task: newTask)
             
-            activeSwitch.addTarget(self, action: #selector(self.switchValueChanged), for: UIControlEvents.valueChanged)
+            activeSwitch.addTarget(self, action: #selector(self.switchValueChanged), for: UIControl.Event.valueChanged)
             
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextViewTextDidChange, object: descField, queue: OperationQueue.main) { (notification) in
+            NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: descField, queue: OperationQueue.main) { (notification) in
                 self.saveButton.isEnabled = self.descField.text != newTask.desc
             }
         }
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: nameField, queue: OperationQueue.main) { (notification) in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: nameField, queue: OperationQueue.main) { (notification) in
             self.saveButton.isEnabled = self.nameField.text != self.newTask?.name && self.nameField.text != ""
         }
     }
@@ -261,7 +261,7 @@ class TaskDetailTableViewController: UITableViewController, UITextFieldDelegate,
         return Double(components.minute! + components.hour! * 60)
     }
     
-    func switchValueChanged() {
+    @objc func switchValueChanged() {
         if inEdit && activeSwitch.isOn != newTask?.state {
             self.saveButton.isEnabled = true
         } else {

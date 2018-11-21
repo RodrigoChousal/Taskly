@@ -44,7 +44,7 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
         
         view.setBackground()
 
-        goButton.setImage(#imageLiteral(resourceName: "begin_btn_pressed"), for: UIControlState.highlighted)
+        goButton.setImage(#imageLiteral(resourceName: "begin_btn_pressed"), for: UIControl.State.highlighted)
         
         self.navigationBar.title = routine.name
         
@@ -152,7 +152,7 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
         let taskToMove = routine.tasks[sourceIndexPath.row]
         
         try! realm.write {
-            routine.tasks.remove(objectAtIndex: sourceIndexPath.row)
+			routine.tasks.remove(at: sourceIndexPath.row)
             routine.tasks.insert(taskToMove, at: sourceIndexPath.row)
         }
     }
@@ -187,17 +187,17 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
         return true
     }
 
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        let currentCharacterCount = textField.text?.characters.count ?? 0
+        let currentCharacterCount = textField.text?.count ?? 0
         
         if range.length + range.location > currentCharacterCount {
             return false
         }
         
-        let newLength = currentCharacterCount + string.characters.count - range.length
+        let newLength = currentCharacterCount + string.count - range.length
         
         return newLength <= 40
     }
@@ -206,14 +206,14 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
     
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let str = "You have no tasks in \"\(routine.name)\""
-        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline).withSize(18.0), NSForegroundColorAttributeName: UIColor.white]
-        return NSAttributedString(string: str, attributes: attrs)
+        let attrs = [convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline).withSize(18.0), convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor): UIColor.white]
+        return NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attrs))
     }
     
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let str = "Add a task to get started!"
-        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline).withSize(18.0), NSForegroundColorAttributeName: UIColor.white]
-        return NSAttributedString(string: str, attributes: attrs)
+        let attrs = [convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline).withSize(18.0), convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor): UIColor.white]
+        return NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attrs))
     }
     
     func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
@@ -340,7 +340,7 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
         return cellSnapshot
     }
     
-    func longPressGestureRecognized(_ gestureRecognizer: UIGestureRecognizer) {
+    @objc func longPressGestureRecognized(_ gestureRecognizer: UIGestureRecognizer) {
         
         let longPress = gestureRecognizer as! UILongPressGestureRecognizer
         let state = longPress.state
@@ -357,42 +357,44 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
         
         switch state {
             
-            case UIGestureRecognizerState.began:
+            case UIGestureRecognizer.State.began:
                 
                 if let indexPath = indexPath {
                 
                     Path.initialIndexPath = indexPath as NSIndexPath?
-                    
-                    let cell = taskListView.cellForRow(at: indexPath) as UITableViewCell!
-                    My.cellSnapshot  = snapshotOfCell(inputView: cell!)
-                    
-                    var center = cell?.center
-                    
-                    My.cellSnapshot!.center = center!
-                    My.cellSnapshot!.alpha = 0.0
-                    
-                    taskListView.addSubview(My.cellSnapshot!)
-                
-                    UIView.animate(withDuration: 0.25, animations: { () -> Void in
-                    
-                        center?.y = locationInView.y
-                        My.cellSnapshot!.center = center!
-                        My.cellSnapshot!.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-                        My.cellSnapshot!.alpha = 0.98
-                        cell?.alpha = 0.0
-                    
-                    }, completion: { (finished) -> Void in
-                        if finished && self.hideCellAllowed == true{
-                            cell?.isHidden = true
-                        }
-                    })
+					
+					if let cell = taskListView.cellForRow(at: indexPath) {
+						My.cellSnapshot  = snapshotOfCell(inputView: cell)
+						
+						var center = cell.center
+						
+						My.cellSnapshot!.center = center
+						My.cellSnapshot!.alpha = 0.0
+						
+						taskListView.addSubview(My.cellSnapshot!)
+						
+						UIView.animate(withDuration: 0.25, animations: { () -> Void in
+							
+							center.y = locationInView.y
+							My.cellSnapshot!.center = center
+							My.cellSnapshot!.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+							My.cellSnapshot!.alpha = 0.98
+							cell.alpha = 0.0
+							
+						}, completion: { (finished) -> Void in
+							if finished && self.hideCellAllowed == true{
+								cell.isHidden = true
+							}
+						})
+					}
                 }
             
-            case UIGestureRecognizerState.changed:
+            case UIGestureRecognizer.State.changed:
                 
                 if let indexPath = indexPath {
-                    let cell = taskListView.cellForRow(at: indexPath) as UITableViewCell!
-                    cell?.alpha = 0.0
+					if let cell = taskListView.cellForRow(at: indexPath) {
+						cell.alpha = 0.0
+					}
                 }
                 
                 var center = My.cellSnapshot!.center
@@ -413,28 +415,41 @@ class TaskListController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 hideCellAllowed = false
                 
-                let cell = taskListView.cellForRow(at: Path.initialIndexPath! as IndexPath) as UITableViewCell!
-                cell?.isHidden = false
-                cell?.alpha = 0.0
-                
-                UIView.animate(withDuration: 0.25, animations: { () -> Void in
-                    
-                    My.cellSnapshot!.center = (cell?.center)!
-                    My.cellSnapshot!.transform = CGAffineTransform.identity
-                    
-                }, completion: { (finished) -> Void in
-                    
-                    if finished {
-                        
-                        My.cellSnapshot!.alpha = 0.0
-                        cell?.alpha = 1.0
-                        
-                        Path.initialIndexPath = nil
-                        My.cellSnapshot!.removeFromSuperview()
-                        My.cellSnapshot = nil
-                    }
-                    
-                })
+                if let cell = taskListView.cellForRow(at: Path.initialIndexPath! as IndexPath) {
+					cell.isHidden = false
+					cell.alpha = 0.0
+					
+					UIView.animate(withDuration: 0.25, animations: { () -> Void in
+						
+						My.cellSnapshot!.center = cell.center
+						My.cellSnapshot!.transform = CGAffineTransform.identity
+						
+					}, completion: { (finished) -> Void in
+						
+						if finished {
+							
+							My.cellSnapshot!.alpha = 0.0
+							cell.alpha = 1.0
+							
+							Path.initialIndexPath = nil
+							My.cellSnapshot!.removeFromSuperview()
+							My.cellSnapshot = nil
+						}
+						
+					})
+				}
+			
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

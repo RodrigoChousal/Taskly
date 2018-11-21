@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let content = UNMutableNotificationContent()
             content.title = routine.name
             content.body = "Let's go!"
-            content.sound = UNNotificationSound.default()
+            content.sound = UNNotificationSound.default
             
             let request = UNNotificationRequest(identifier: id + "." + rep, content: content, trigger: trigger)
             
@@ -91,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let content = UNMutableNotificationContent()
             content.title = name
             content.body = "This is your next task!"
-            content.sound = UNNotificationSound.default()
+            content.sound = UNNotificationSound.default
             
             let request = UNNotificationRequest(identifier: name, content: content, trigger: trigger)
             
@@ -107,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
     }
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) {(accepted, error) in
             if !accepted {
@@ -115,18 +115,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        UINavigationBar.appearance().titleTextAttributes = [
-            NSFontAttributeName: UIFont(name: "Avenir-Medium", size: 18) ?? UIFont.systemFont(ofSize: 18),
-            NSForegroundColorAttributeName : UIColor.white
-        ]
+        UINavigationBar.appearance().titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([
+            NSAttributedString.Key.font.rawValue: UIFont(name: "Avenir-Medium", size: 18) ?? UIFont.systemFont(ofSize: 18),
+            NSAttributedString.Key.foregroundColor.rawValue : UIColor.white
+        ])
                 
         UIBarButtonItem.appearance().setTitleTextAttributes(
-            [NSFontAttributeName: UIFont(name:"Avenir-Roman", size:13) ?? UIFont.systemFont(ofSize: 13),
-             NSForegroundColorAttributeName: UIColor.white],
+            convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont(name:"Avenir-Roman", size:13) ?? UIFont.systemFont(ofSize: 13),
+             convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor): UIColor.white]),
             for: .normal)
         UIBarButtonItem.appearance().setTitleTextAttributes(
-            [NSFontAttributeName: UIFont(name:"Avenir-Roman", size:13) ?? UIFont.systemFont(ofSize: 13),
-             NSForegroundColorAttributeName: UIColor.white.withAlphaComponent(0.3)],
+            convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont(name:"Avenir-Roman", size:13) ?? UIFont.systemFont(ofSize: 13),
+             convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor): UIColor.white.withAlphaComponent(0.3)]),
             for: .disabled)
         
         UINavigationBar.appearance().barTintColor = UIColor(red: 36/255, green: 45/255, blue: 70/255, alpha: 1.0)
@@ -163,3 +163,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}

@@ -75,8 +75,8 @@ class ActiveRoutineViewController: UIViewController {
         super.viewDidLoad()
         
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: Notification.Name.UIApplicationWillResignActive, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(appReturnedToForeground), name: Notification.Name.UIApplicationDidBecomeActive, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(appReturnedToForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
         
         UIApplication.shared.isIdleTimerDisabled = true
         
@@ -123,7 +123,7 @@ class ActiveRoutineViewController: UIViewController {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
     }
     
-    func update() {
+    @objc func update() {
         
         currentTaskProgress = Float(1.0 - Double(timeInSeconds) / Double(currentTaskLength))
         taskProgressBar.setProgress(currentTaskProgress, animated: true)
@@ -389,7 +389,7 @@ class ActiveRoutineViewController: UIViewController {
         }
         
         view.addSubview(backView)
-        view.sendSubview(toBack: backView)
+        view.sendSubviewToBack(backView)
     }
     
     func secondsToString (_ seconds: Int) -> String {
@@ -454,7 +454,7 @@ class ActiveRoutineViewController: UIViewController {
             alertMessage = "Great work! Another productive \(routine.timeOfDay.lowercased())!"
         }
         
-        let alertController = UIAlertController(title: "Routine completed", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = UIAlertController(title: "Routine completed", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
         let finishAction = UIAlertAction(title: "Finish", style: .default, handler: self.returnToLastView)
         alertController.addAction(finishAction)
         
@@ -474,11 +474,11 @@ class ActiveRoutineViewController: UIViewController {
         }
     }
     
-    func appMovedToBackground() {
+    @objc func appMovedToBackground() {
         enteredBackgroundDate = Date()
     }
 
-    func appReturnedToForeground() {
+    @objc func appReturnedToForeground() {
         let elapsed = Int(Date().timeIntervalSince(enteredBackgroundDate))
         
         routineSecondsElapsed += elapsed
